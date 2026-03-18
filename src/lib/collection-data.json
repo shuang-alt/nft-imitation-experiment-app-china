@@ -1,0 +1,72 @@
+{
+  "pixelPaws": {
+    "key": "pixelPaws",
+    "name": "PixelPaws",
+    "creator": "Nova Studio",
+    "createdDate": "March 2021",
+    "floorPrice": "0.42 ETH",
+    "description": "A collection of pixel-style animal NFTs.",
+    "artVariant": "pixelPaws",
+    "themeTagline": "Retro animal collectibles with a playful pixel-market vibe.",
+    "normalizationNote": "Display metadata is normalized to the experimental specification. Visual references were aligned to public OpenSea pixel-pet collections and then re-rendered as original mock artwork for the study UI.",
+    "coverPalette": ["#f59e0b", "#fb7185", "#2563eb"],
+    "thumbnailPalette": ["#fee2e2", "#fde68a", "#dbeafe", "#dcfce7"],
+    "sourceReferences": [
+      {
+        "title": "PIXEL PAWS NFT - Collection | OpenSea",
+        "url": "https://opensea.io/collection/pixel-paws-nft",
+        "note": "Primary public reference for pixel-pet composition, pixel-animal naming cues, and collection page visual rhythm."
+      },
+      {
+        "title": "PixelPaw R02792 - pixelpawsnft | OpenSea",
+        "url": "https://opensea.io/item/polygon/0x2953399124f0cbb46d2cbacd8a89cf0599974963/69805133742680201073878810953015015342123326143908381636191461620524265766913",
+        "note": "Secondary item-level reference for close-up pixel-cat traits and detail-page presentation."
+      }
+    ]
+  },
+  "pixelPawsX": {
+    "key": "pixelPawsX",
+    "name": "PixelPaws X",
+    "creator": "Neo Studio",
+    "createdDate": "September 2022",
+    "floorPrice": "0.35 ETH",
+    "description": "A collection of pixel-style animal NFTs inspired by the recent pixel animal trend.",
+    "artVariant": "pixelPawsX",
+    "themeTagline": "A brighter sequel aesthetic shaped around the later pixel-animal trend cycle.",
+    "normalizationNote": "The experimental label PixelPaws X is retained even though the final card art is a normalized mock asset. Styling references come from public OpenSea pixel collections launched around 2022, then re-authored for consistency with the study design.",
+    "coverPalette": ["#14b8a6", "#38bdf8", "#818cf8"],
+    "thumbnailPalette": ["#ccfbf1", "#dbeafe", "#e0e7ff", "#fef3c7"],
+    "sourceReferences": [
+      {
+        "title": "Pixelady Maker - Collection | OpenSea",
+        "url": "https://opensea.io/collection/pixeladymaker",
+        "note": "Used as a 2022 pixel-style reference for later-wave pixel collection presentation and UI mood."
+      },
+      {
+        "title": "Mars Cats Voyage - Collection | OpenSea",
+        "url": "https://opensea.io/collection/marscatsvoyage",
+        "note": "Used as a supporting public reference for stylized cat-themed PFP grids and thumbnail density."
+      }
+    ]
+  },
+  "cyberWhales": {
+    "key": "cyberWhales",
+    "name": "CyberWhales",
+    "creator": "Lunar Mint",
+    "createdDate": "September 2022",
+    "floorPrice": "0.38 ETH",
+    "description": "A collection of futuristic whale-themed NFTs with a science-fiction visual style.",
+    "artVariant": "cyberWhales",
+    "themeTagline": "Sci-fi whale avatars with metallic gradients and deep-ocean neon lighting.",
+    "normalizationNote": "CyberWhales is presented with experiment-specific metadata. Artwork direction was normalized from public whale-themed OpenSea references and re-rendered as original mock assets so all collections share one coherent marketplace language.",
+    "coverPalette": ["#0f172a", "#0ea5e9", "#67e8f9"],
+    "thumbnailPalette": ["#cffafe", "#bfdbfe", "#ddd6fe", "#e2e8f0"],
+    "sourceReferences": [
+      {
+        "title": "Secret Society of Whales - Collection | OpenSea",
+        "url": "https://opensea.io/collection/secretsocietyofwhales",
+        "note": "Primary public whale-collection reference for marine silhouette motifs and collection page composition."
+      }
+    ]
+  }
+}
