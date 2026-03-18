@@ -1,48 +1,34 @@
-# NFT Imitation Experiment Platform
+# NFT Imitation Experiment App China
 
-用于 `NFT imitation` 行为实验的 Web 项目，包含 4 个固定条件入口：
+中国大陆部署版分叉仓库，基于源仓库：
 
-- `Study 1 / Control`
-- `Study 1 / Treatment`
-- `Study 2 / Control`
-- `Study 2 / Treatment`
+- [shuang-alt/nft-imitation-experiment-app](https://github.com/shuang-alt/nft-imitation-experiment-app)
 
-项目保留：
+这个版本的目标不是重做实验，而是把现有前端实验项目迁移到适合中国大陆发放与收数的部署方式：
 
-- 两个 study 的完整 7 页流程
-- 逐页保存 API
-- 完成提交 API
-- respondent 会话保持
-- mock / database 双模式数据层
-- 极简 admin dashboard
-- 统一的 collection data layer
+- 前端实验设计保持不变
+- 4 个固定入口保持不变
+- 问卷文字、页序、collection 展示逻辑保持不变
+- 部署目标从 Vercel 调整为 Tencent Cloud EdgeOne Pages
+- 正式收数后端改为 Pages Functions + KV
 
-## Tech Stack
+## 保留的实验结构
 
-- Next.js 16
-- React 19
-- TypeScript
-- Tailwind CSS 4
-- App Router
-- API routes
-
-## Routes
-
-### Fixed Entry Routes
+固定入口：
 
 - `/study1-control`
 - `/study1-treatment`
 - `/study2-control`
 - `/study2-treatment`
 
-### Survey Routes
+动态实验页：
 
 - `/study/study1/control/page/1` 到 `/study/study1/control/page/7`
 - `/study/study1/treatment/page/1` 到 `/study/study1/treatment/page/7`
 - `/study/study2/control/page/1` 到 `/study/study2/control/page/7`
 - `/study/study2/treatment/page/1` 到 `/study/study2/treatment/page/7`
 
-### Other Routes
+其它页面：
 
 - `/`
 - `/admin`
@@ -51,7 +37,35 @@
 - `/thank-you/study2/control`
 - `/thank-you/study2/treatment`
 
-## Local Run
+## 当前实现状态
+
+### 阶段 1
+
+- 已从源仓库复制当前前端代码与实验路由结构
+- 已移除 Vercel 专属工作流
+- 已补 `edgeone.json`
+- 已整理为可直接连接 EdgeOne Pages 的仓库
+
+### 阶段 2
+
+- 已新增正式收数后端：
+  `edge-functions/api/[[default]].js`
+- 已使用 Pages Functions + KV 保存 respondent 与逐页 submission
+- 已保留本地 `mock` 调试能力
+- 已把 admin 升级为可查看统计和导出 JSON / CSV
+- 已加入最小密码保护与 cookie 登录
+
+## 技术栈
+
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- App Router
+- EdgeOne Pages Functions
+- EdgeOne KV
+
+## 本地开发
 
 ```bash
 npm install
@@ -59,245 +73,90 @@ cp .env.example .env.local
 npm run dev
 ```
 
-默认访问：
+本地 `next dev` 下：
 
-- [http://localhost:3000](http://localhost:3000)
+- 问卷页面与路由正常运行
+- `/api/*` 仍使用 Next 本地 mock API
+- 便于调试前端与提交流程
 
-生产构建检查：
+检查命令：
 
 ```bash
 npm run lint
 npm run build
 ```
 
-## Deploy
+## 正式部署
 
-### Vercel
+EdgeOne Pages 详细说明见：
 
-当前仓库已配置 GitHub Actions 触发的 Vercel 生产部署。
+- [EdgeOne Pages 部署说明](/Users/uk5y/Documents/New project 2/nft-imitation-experiment-app-china/docs/edgeone-pages-deployment.md)
+- [数据层说明](/Users/uk5y/Documents/New project 2/nft-imitation-experiment-app-china/docs/data-layer.md)
 
-自动部署工作流文件：
+关键设置如下：
 
-- [.github/workflows/vercel-production.yml](/Users/uk5y/Documents/New%20project%202/nft-imitation-experiment-app/.github/workflows/vercel-production.yml)
+- Root Directory: `/`
+- Install Command: `npm install`
+- Build Command: `npm run build`
+- Output Directory: `.next`
+- Node.js Version: `22.11.0`
 
-GitHub 仓库需要以下 Actions secrets：
+## 环境变量
 
-- `VERCEL_TOKEN`
-- `VERCEL_ORG_ID`
-- `VERCEL_PROJECT_ID`
+模板见：
 
-如果需要绑定正式域名，部署平台侧配置完成后，把 `CUSTOM_DOMAIN` 填回环境变量。
+- [`.env.example`](/Users/uk5y/Documents/New project 2/nft-imitation-experiment-app-china/.env.example)
 
-### Other Hosts
+至少建议在 EdgeOne Pages 项目中配置：
 
-本项目是标准 Next.js Node 运行时应用，也可部署到支持 Next.js 的平台，例如 Railway、Render、自建 Node 服务器。
-
-## Study Logic
-
-### Fixed route-driven condition
-
-- `condition` 由路由固定，不再随机分组
-- `study1-control` 永远进入 `Study 1 / Control`
-- `study1-treatment` 永远进入 `Study 1 / Treatment`
-- `study2-control` 永远进入 `Study 2 / Control`
-- `study2-treatment` 永远进入 `Study 2 / Treatment`
-
-### Respondent identity
-
-- 首次进入某一条固定路径时自动生成 `respondent_id`
-- 格式示例：`resp_study1_control_<uuid>`
-- 会话保存在浏览器 `localStorage`
-- `Study 1 / Control` 与 `Study 1 / Treatment` 会分别保存自己的本地 respondent/session
-
-### Fixed-path test links
-
-如需固定一个可复验的 respondent，会保留以下 query 参数：
-
-- `respondent_id`
-- `started_at`（可选）
-- `reset=1`
-
-示例：
-
-```text
-/study/study1/control/page/1?respondent_id=demo_study1_control&reset=1
-```
-
-`reset=1` 会覆盖当前浏览器里该固定路径已有的本地会话。
-
-### Progressive saving
-
-每次点击“下一页”都会向 `/api/page-events` 发送：
-
-```json
-{
-  "respondent_id": "resp_study1_control_xxx",
-  "study_id": "study1",
-  "condition": "control",
-  "page_number": 4,
-  "page_version": "study1-page4-v1",
-  "answers": {
-    "attention_1": 6
-  },
-  "entered_at": "2026-03-18T12:00:00.000Z",
-  "submitted_at": "2026-03-18T12:00:08.000Z",
-  "duration_ms": 8000
-}
-```
-
-最后一页还会向 `/api/respondents/finish` 发送：
-
-```json
-{
-  "respondent_id": "resp_study1_control_xxx",
-  "study_id": "study1",
-  "condition": "control",
-  "finished_at": "2026-03-18T12:05:00.000Z",
-  "status": "completed"
-}
-```
-
-### Mock mode vs production mode
-
-#### Mock mode
-
-当数据库占位符未填写时：
-
-- 项目仍可完整运行
-- API routes 会接受 payload
-- server log 会打印本应写入数据库的数据
-- browser console 会打印 mock save 信息
-- 浏览器 `localStorage` 会缓存本机提交
-- `/admin` 会显示 mock/local 概览
-
-#### Production mode
-
-当以下数据库相关变量填写完毕后，API routes 会尝试通过 REST 方式写入真实数据库：
-
-- `NEXT_PUBLIC_DATABASE_URL`
-- `DATABASE_SERVICE_ROLE_KEY`
-- `RESPONSES_TABLE_NAME`
-- `PAGE_EVENTS_TABLE_NAME`
-- `RESPONDENTS_TABLE_NAME`
-
-当前实现默认按照 Supabase REST 风格组织请求：
-
-- `POST /rest/v1/<table>` 写入 page events 和 response snapshots
-- `PATCH /rest/v1/<table>?respondent_id=eq...&study_id=eq...` 更新完成状态
-
-如果你使用其他数据库或 API gateway，只需要在 [src/lib/storage.ts](/Users/uk5y/Documents/New%20project%202/nft-imitation-experiment-app/src/lib/storage.ts) 中替换 `databaseRequest` 及相关 `persist*` 方法。
-
-## Environment Variables To Fill Later
-
-以下变量已经预留，请保持名称不变：
-
-- `NEXT_PUBLIC_DATABASE_URL`
-- `NEXT_PUBLIC_DATABASE_ANON_KEY`
-- `DATABASE_SERVICE_ROLE_KEY`
-- `RESPONSES_TABLE_NAME`
-- `PAGE_EVENTS_TABLE_NAME`
-- `RESPONDENTS_TABLE_NAME`
-- `API_BASE_URL`
 - `ADMIN_DASHBOARD_PASSWORD`
+- `ADMIN_SESSION_SECRET`
+
+可选：
+
+- `API_BASE_URL`
 - `CUSTOM_DOMAIN`
 
-### How each placeholder is used
+## Pages Functions + KV
 
-- `NEXT_PUBLIC_DATABASE_URL`
-  当前 REST 数据库入口地址。默认按 Supabase REST 结构使用。
-- `NEXT_PUBLIC_DATABASE_ANON_KEY`
-  预留给未来 client-side database calls 或 RLS 扩展。当前原型的写入主要使用 service role。
-- `DATABASE_SERVICE_ROLE_KEY`
-  服务端写入数据库时使用。
-- `RESPONSES_TABLE_NAME`
-  保存每页回答快照。
-- `PAGE_EVENTS_TABLE_NAME`
-  保存逐页提交事件。
-- `RESPONDENTS_TABLE_NAME`
-  保存 respondent start / completion 状态。
-- `API_BASE_URL`
-  预留给未来把 `/api/*` 抽到独立后端服务时使用。当前同域部署可先保留占位。
-- `ADMIN_DASHBOARD_PASSWORD`
-  如果填写，`/admin` 将要求通过 query string 提供密码。
-- `CUSTOM_DOMAIN`
-  部署上线后的正式域名占位。
+线上正式收数依赖：
 
-## Admin Dashboard
+- EdgeOne Pages Functions
+- EdgeOne KV 绑定变量名：`NFT_EXPERIMENT_KV`
 
-`/admin` 当前展示：
+KV key 结构：
 
-- total respondents
-- completed respondents
-- study1 / study2 counts
-- control / treatment counts
-- latest submissions
+- `respondent_<study>_<condition>_<hexRespondentId>`
+- `submission_<study>_<condition>_<hexRespondentId>_<pageNumber>`
 
-## Data Layer
+前端保存体验保持不变：
 
-统一 collection data layer 位于：
+- 首次进入固定入口创建 respondent
+- 每页点击下一页逐页保存
+- 最后一页 finish
+- 本地仍保留 respondent/session
 
-- [src/lib/collection-data.json](/Users/uk5y/Documents/New%20project%202/nft-imitation-experiment-app/src/lib/collection-data.json)
+## Admin / 导出
 
-问卷流程与页面定义位于：
+研究者后台路径：
 
-- [src/lib/experiments.ts](/Users/uk5y/Documents/New%20project%202/nft-imitation-experiment-app/src/lib/experiments.ts)
+- `/admin`
 
-## Public References vs Localized Assets
+提供：
 
-### Public references used
+- 总提交数
+- 完成数
+- 按 study / condition 统计
+- 最近提交记录
+- 导出 JSON
+- 导出 CSV
 
-- `Based OnChain Dinos`
-  - [Based OnChain Dinos | OpenSea](https://opensea.io/collection/based-onchain-dinos)
-- `tiny dinos (eth)`
-  - [tiny dinos (eth) | OpenSea](https://opensea.io/collection/tiny-dinos-eth)
-- `GOOP TROOP`
-  - [GOOP TROOP | OpenSea](https://opensea.io/collection/goop-troop)
-- `Lil Nouns`
-  - [Lil Nouns | OpenSea](https://opensea.io/collection/lil-nouns)
+访问方式：
 
-### What is localized / normalized
+- 未配置 `ADMIN_DASHBOARD_PASSWORD` 时可直接访问
+- 已配置后需登录，后台会设置 httpOnly cookie
 
-- 4 个 collection 的最终实验展示 metadata 使用了实验规范中的固定字段
-- 页面中的 artwork 先从公开 OpenSea item 页抓取，再下载到本地 `public/collections/*`
-- 为适配 6 图网格，本地静态图片对 OpenSea 宽幅 OG 图做了左侧正方裁切
+## 已完成的本地验证
 
-## Project Structure
-
-```text
-src/
-  app/
-    admin/
-    api/
-      page-events/
-      respondents/
-        finish/
-        start/
-    study/
-      [studyId]/
-        [condition]/
-          page/
-            [pageNumber]/
-    study1-control/
-    study1-treatment/
-    study2-control/
-    study2-treatment/
-    thank-you/
-      [studyId]/
-        [condition]/
-  components/
-    admin-dashboard.tsx
-    collection-art.tsx
-    collection-card.tsx
-    experiment-entry.tsx
-    likert-question-group.tsx
-    study-runner.tsx
-  lib/
-    client-storage.ts
-    collection-data.json
-    config.ts
-    dashboard.ts
-    experiments.ts
-    mock-storage.ts
-    storage.ts
-    types.ts
-```
+- `npm run lint`
+- `npm run build`
