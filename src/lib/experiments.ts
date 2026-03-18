@@ -192,7 +192,7 @@ function buildStudy1Pages(condition: Condition): ResolvedStudyPage[] {
       pageVersion: "study1-page3-v1",
       introLines: ["现在请继续浏览下面这个 NFT collection。"],
       collectionKey: "pixelPaws",
-      collectionNameOverride: "PixelPaws（被模仿的原创）",
+      collectionNameOverride: "PixelPaws",
       footerLines: [
         "请根据你对这个 NFT collection 的印象，在接下来的问题中作答。",
         "点击“下一页”继续。",
@@ -204,7 +204,7 @@ function buildStudy1Pages(condition: Condition): ResolvedStudyPage[] {
       pageNumber: 4,
       pageVersion: "study1-page4-v1",
       introLines: [
-        "以下问题是关于 PixelPaws collection--（被模仿的原创）。",
+        "以下问题是关于 PixelPaws collection。",
         "请根据你的真实感受回答。",
       ],
       scaleLabel: likertScaleLabel,
