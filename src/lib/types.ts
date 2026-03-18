@@ -1,4 +1,4 @@
-export type StorageMode = "mock" | "database";
+export type StorageMode = "mock" | "edgeone-kv";
 export type StudyId = "study1" | "study2";
 export type Condition = "control" | "treatment";
 export type CollectionKey =
@@ -179,6 +179,7 @@ export type DashboardSummary = {
   completedRespondents: number;
   studyCounts: Record<StudyId, number>;
   conditionCounts: Record<Condition, number>;
+  studyConditionCounts: Record<StudyId, Record<Condition, number>>;
   latestSubmissions: DashboardSubmission[];
   storageMode: StorageMode;
   notices: string[];
@@ -188,4 +189,30 @@ export type DashboardSummary = {
 export type PersistResult = {
   mode: StorageMode;
   fallback?: boolean;
+};
+
+export type ResearchAnswerRow = {
+  respondent_id: string;
+  study_id: StudyId;
+  condition: Condition;
+  page_number: number;
+  page_version: string;
+  entered_at: string;
+  submitted_at: string;
+  duration_ms: number;
+  question_code: string;
+  response_value: AnswerValue;
+  started_at: string;
+  finished_at?: string;
+  completion_status: RespondentRecord["status"];
+};
+
+export type ResearchExportBundle = {
+  generated_at: string;
+  storage_mode: StorageMode;
+  respondents: RespondentRecord[];
+  page_submissions: PageEventPayload[];
+  finishes: RespondentFinishPayload[];
+  answer_rows: ResearchAnswerRow[];
+  notices: string[];
 };

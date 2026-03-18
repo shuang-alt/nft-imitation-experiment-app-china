@@ -34,7 +34,7 @@ export function mergeDashboardDatasets(
 
   for (const dataset of datasets) {
     storageMode =
-      dataset.storageMode === "database" ? "database" : storageMode;
+      dataset.storageMode === "edgeone-kv" ? "edgeone-kv" : storageMode;
 
     for (const notice of dataset.notices) {
       notices.add(notice);
@@ -112,10 +112,21 @@ export function buildDashboardSummary(dataset: DashboardDataset): DashboardSumma
     control: 0,
     treatment: 0,
   };
+  const studyConditionCounts: DashboardSummary["studyConditionCounts"] = {
+    study1: {
+      control: 0,
+      treatment: 0,
+    },
+    study2: {
+      control: 0,
+      treatment: 0,
+    },
+  };
 
   for (const respondent of dataset.respondents) {
     studyCounts[respondent.study_id] += 1;
     conditionCounts[respondent.condition] += 1;
+    studyConditionCounts[respondent.study_id][respondent.condition] += 1;
   }
 
   const latestSubmissions: DashboardSubmission[] = [
@@ -148,6 +159,7 @@ export function buildDashboardSummary(dataset: DashboardDataset): DashboardSumma
     ).length,
     studyCounts,
     conditionCounts,
+    studyConditionCounts,
     latestSubmissions,
     storageMode: dataset.storageMode,
     notices: dataset.notices,

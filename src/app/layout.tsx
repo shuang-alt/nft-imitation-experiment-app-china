@@ -15,7 +15,7 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: "NFT Imitation Experiment Platform",
   description:
-    "A dual-study NFT marketplace browsing experiment with randomized conditions, progressive saving, and database-ready API placeholders.",
+    "A dual-study NFT marketplace browsing experiment with four fixed entries, progressive saving, and EdgeOne Pages deployment support for mainland China.",
 };
 
 export default function RootLayout({

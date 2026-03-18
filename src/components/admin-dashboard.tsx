@@ -1,9 +1,11 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import {
   Activity,
   CircleCheckBig,
+  DatabaseZap,
+  Download,
   FolderKanban,
   ShieldCheck,
   Users,
@@ -45,6 +47,10 @@ const statCards = [
   },
 ];
 
+function getStorageModeLabel(storageMode: DashboardDataset["storageMode"]) {
+  return storageMode === "edgeone-kv" ? "EdgeOne KV" : "Mock";
+}
+
 export function AdminDashboard({ initialDataset }: AdminDashboardProps) {
   const browserDataset = useSyncExternalStore(
     subscribeToStorage,
@@ -58,9 +64,63 @@ export function AdminDashboard({ initialDataset }: AdminDashboardProps) {
       updatedAt: "",
     }),
   );
-  const dataset = mergeDashboardDatasets(initialDataset, browserDataset);
+  const [serverDataset, setServerDataset] = useState(initialDataset);
+  const [isRefreshing, setIsRefreshing] = useState(true);
+  const [remoteError, setRemoteError] = useState("");
 
+  useEffect(() => {
+    let active = true;
+
+    async function loadDataset() {
+      try {
+        const response = await fetch("/api/admin/dataset", {
+          method: "GET",
+          cache: "no-store",
+          credentials: "same-origin",
+        });
+
+        if (!response.ok) {
+          throw new Error(`Request failed: ${response.status}`);
+        }
+
+        const dataset = (await response.json()) as DashboardDataset;
+
+        if (!active) {
+          return;
+        }
+
+        setServerDataset(dataset);
+        setRemoteError("");
+      } catch (error) {
+        console.error("Failed to load admin dataset", error);
+
+        if (!active) {
+          return;
+        }
+
+        setRemoteError("无法刷新远端数据，当前展示本地预览结果。");
+      } finally {
+        if (active) {
+          setIsRefreshing(false);
+        }
+      }
+    }
+
+    void loadDataset();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const dataset =
+    serverDataset.storageMode === "edgeone-kv"
+      ? serverDataset
+      : mergeDashboardDatasets(serverDataset, browserDataset);
   const summary = buildDashboardSummary(dataset);
+  const notices = remoteError
+    ? [...summary.notices, remoteError]
+    : summary.notices;
 
   return (
     <div className="space-y-8">
@@ -87,7 +147,7 @@ export function AdminDashboard({ initialDataset }: AdminDashboardProps) {
         })}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+      <div className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
         <section className="rounded-[30px] border border-white/80 bg-white/85 p-6 shadow-[0_22px_60px_rgba(15,23,42,0.1)]">
           <div className="flex items-center gap-3">
             <span className="rounded-2xl bg-emerald-50 p-2 text-emerald-600">
@@ -96,11 +156,12 @@ export function AdminDashboard({ initialDataset }: AdminDashboardProps) {
             <div>
               <h2 className="font-display text-2xl text-slate-950">Storage Overview</h2>
               <p className="text-sm text-slate-500">
-                当前模式：{summary.storageMode === "database" ? "database" : "mock"}
+                当前模式：{getStorageModeLabel(summary.storageMode)}
               </p>
             </div>
           </div>
-          <dl className="mt-6 grid gap-3 sm:grid-cols-2">
+
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
             <div className="rounded-[24px] border border-slate-100 bg-slate-50/80 p-4">
               <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                 Control
@@ -117,9 +178,62 @@ export function AdminDashboard({ initialDataset }: AdminDashboardProps) {
                 {summary.conditionCounts.treatment}
               </dd>
             </div>
-          </dl>
+          </div>
+
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            {(
+              [
+                ["Study 1 / Control", summary.studyConditionCounts.study1.control],
+                ["Study 1 / Treatment", summary.studyConditionCounts.study1.treatment],
+                ["Study 2 / Control", summary.studyConditionCounts.study2.control],
+                ["Study 2 / Treatment", summary.studyConditionCounts.study2.treatment],
+              ] as const
+            ).map(([label, value]) => (
+              <div
+                key={label}
+                className="rounded-[24px] border border-slate-100 bg-slate-50/80 p-4"
+              >
+                <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  {label}
+                </dt>
+                <dd className="mt-2 text-2xl font-display text-slate-950">{value}</dd>
+              </div>
+            ))}
+          </div>
+
+          {notices.length > 0 ? (
+            <div className="mt-6 space-y-2">
+              {notices.map((notice) => (
+                <p
+                  key={notice}
+                  className="rounded-[22px] border border-slate-100 bg-slate-50/80 px-4 py-3 text-sm text-slate-600"
+                >
+                  {notice}
+                </p>
+              ))}
+            </div>
+          ) : null}
+
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a
+              href="/api/admin/export/json"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-300 hover:bg-slate-50"
+            >
+              <Download className="h-4 w-4" />
+              Export JSON
+            </a>
+            <a
+              href="/api/admin/export/csv"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-300 hover:bg-slate-50"
+            >
+              <DatabaseZap className="h-4 w-4" />
+              Export CSV
+            </a>
+          </div>
+
           <p className="mt-5 text-xs text-slate-500">
             Last refreshed: {formatTimestamp(summary.updatedAt)}
+            {isRefreshing ? " · refreshing..." : ""}
           </p>
         </section>
 
@@ -128,7 +242,7 @@ export function AdminDashboard({ initialDataset }: AdminDashboardProps) {
 
           {summary.latestSubmissions.length === 0 ? (
             <div className="mt-6 rounded-[24px] border border-dashed border-slate-200 bg-slate-50/80 px-4 py-10 text-center text-sm text-slate-500">
-              尚无提交记录。先完成任一 study 流程，再回到此页即可查看本机 mock 数据概览。
+              尚无提交记录。先完成任一 study 流程，再回到此页即可查看数据概览。
             </div>
           ) : (
             <div className="mt-6 overflow-hidden rounded-[24px] border border-slate-100">

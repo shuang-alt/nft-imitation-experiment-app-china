@@ -118,7 +118,7 @@ export function getMockDashboardDataset(): DashboardDataset {
     storageMode: "mock",
     notices: [
       "Mock mode is active. Page events are logged to the server console and kept in in-memory demo storage.",
-      "This browser also caches a local copy of submissions so the admin page can preview the payload structure without a live database.",
+      "This browser also caches a local copy of submissions so the admin page can preview the payload structure without a live EdgeOne KV backend.",
     ],
     updatedAt: new Date().toISOString(),
   });
