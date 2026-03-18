@@ -74,7 +74,17 @@ npm run build
 
 ### Vercel
 
-推荐将当前 GitHub 仓库连接到 Vercel 并使用自动部署。
+当前仓库已配置 GitHub Actions 触发的 Vercel 生产部署。
+
+自动部署工作流文件：
+
+- [.github/workflows/vercel-production.yml](/Users/uk5y/Documents/New%20project%202/nft-imitation-experiment-app/.github/workflows/vercel-production.yml)
+
+GitHub 仓库需要以下 Actions secrets：
+
+- `VERCEL_TOKEN`
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
 
 如果需要绑定正式域名，部署平台侧配置完成后，把 `CUSTOM_DOMAIN` 填回环境变量。
 
