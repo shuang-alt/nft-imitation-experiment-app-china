@@ -32,6 +32,23 @@
 - `/thank-you/study2`
 - `/admin`
 
+### Test session links
+
+为了便于验收，可以给 `study` 路由附加以下 query 参数，直接初始化一个固定 respondent 会话：
+
+- `respondent_id`
+- `condition`
+- `started_at`（可选）
+- `reset=1`
+
+示例：
+
+```text
+/study-1?respondent_id=demo_study1_control&condition=control&reset=1
+```
+
+`reset=1` 会覆盖当前浏览器内该 study 既有的本地会话，方便重复测试固定 condition。
+
 ## Local Run
 
 ```bash

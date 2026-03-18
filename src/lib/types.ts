@@ -112,6 +112,14 @@ export type RespondentSession = {
   pageDrafts: Record<string, AnswerRecord>;
 };
 
+export type StudySessionBootstrap = {
+  respondentId: string;
+  condition: Condition;
+  startedAt?: string;
+  currentPage?: number;
+  reset?: boolean;
+};
+
 export type RespondentStartPayload = {
   respondent_id: string;
   study_id: StudyId;

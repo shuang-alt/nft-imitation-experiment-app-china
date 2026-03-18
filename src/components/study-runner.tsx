@@ -6,6 +6,7 @@ import { useEffect, useState, useSyncExternalStore, useTransition } from "react"
 import { ArrowRight, Clock3, Layers3, Shield, Sparkles } from "lucide-react";
 
 import {
+  bootstrapStudySession,
   cacheFinish,
   cachePageEvent,
   cacheRespondentStart,
@@ -27,6 +28,7 @@ import type {
   DemographicsPage,
   PersistResult,
   ResolvedStudyPage,
+  StudySessionBootstrap,
   StudyId,
 } from "@/lib/types";
 import { abbreviateRespondentId, cn } from "@/lib/utils";
@@ -37,6 +39,7 @@ import { LikertQuestionGroup } from "./likert-question-group";
 type StudyRunnerProps = {
   studyId: StudyId;
   pageNumber: number;
+  bootstrap?: StudySessionBootstrap;
 };
 
 function isPageComplete(page: ResolvedStudyPage, answers: AnswerRecord) {
@@ -90,7 +93,7 @@ async function postPayload<T>(path: string, payload: unknown): Promise<T> {
   return (await response.json()) as T;
 }
 
-export function StudyRunner({ studyId, pageNumber }: StudyRunnerProps) {
+export function StudyRunner({ studyId, pageNumber, bootstrap }: StudyRunnerProps) {
   const session = useSyncExternalStore(
     subscribeToStorage,
     () => getStudySessionSnapshot(studyId),
@@ -100,7 +103,12 @@ export function StudyRunner({ studyId, pageNumber }: StudyRunnerProps) {
   const page = session ? pages[pageNumber - 1] : null;
 
   useEffect(() => {
-    const { session: ensuredSession, isNew } = ensureStudySession(studyId);
+    const { session: ensuredSession, isNew } = bootstrap
+      ? bootstrapStudySession(studyId, {
+          ...bootstrap,
+          currentPage: pageNumber,
+        })
+      : ensureStudySession(studyId);
     updateStudyCurrentPage(studyId, pageNumber);
 
     if (isNew) {
@@ -123,7 +131,7 @@ export function StudyRunner({ studyId, pageNumber }: StudyRunnerProps) {
           console.error("Failed to initialize respondent", error);
         });
     }
-  }, [pageNumber, studyId]);
+  }, [bootstrap, pageNumber, studyId]);
 
   if (!session || !page) {
     return (

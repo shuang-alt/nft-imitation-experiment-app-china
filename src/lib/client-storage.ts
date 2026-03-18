@@ -6,6 +6,7 @@ import type {
   RespondentFinishPayload,
   RespondentSession,
   RespondentStartPayload,
+  StudySessionBootstrap,
   StudyId,
 } from "./types";
 
@@ -135,6 +136,42 @@ export function getOrCreateStudySession(studyId: StudyId) {
 
 export function ensureStudySession(studyId: StudyId) {
   return getOrCreateStudySession(studyId);
+}
+
+export function bootstrapStudySession(
+  studyId: StudyId,
+  seed: StudySessionBootstrap,
+) {
+  const existing = readStudySession(studyId);
+  const shouldReset =
+    seed.reset ||
+    !existing ||
+    existing.respondentId !== seed.respondentId ||
+    existing.condition !== seed.condition;
+
+  if (!shouldReset && existing) {
+    return {
+      session: existing,
+      isNew: false,
+    };
+  }
+
+  const session: RespondentSession = {
+    respondentId: seed.respondentId,
+    studyId,
+    condition: seed.condition,
+    startedAt: seed.startedAt ?? new Date().toISOString(),
+    currentPage: seed.currentPage ?? 1,
+    completedAt: undefined,
+    pageDrafts: {},
+  };
+
+  writeJson(sessionStorageKey(studyId), session);
+
+  return {
+    session,
+    isNew: true,
+  };
 }
 
 export function getStudySessionSnapshot(studyId: StudyId) {
