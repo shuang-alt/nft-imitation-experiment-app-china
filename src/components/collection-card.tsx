@@ -52,7 +52,7 @@ export function CollectionCard({
           </span>
         </div>
 
-        <CollectionArt variant={collection.artVariant} />
+        <CollectionArt name={nameOverride ?? collection.name} imagePaths={collection.imagePaths} />
 
         <div className="grid gap-3 md:grid-cols-3">
           <div className="rounded-[24px] border border-slate-100 bg-slate-50/80 p-4">

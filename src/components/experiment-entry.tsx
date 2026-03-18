@@ -89,7 +89,7 @@ export function ExperimentEntry({ studyId, condition }: ExperimentEntryProps) {
               <div className="absolute right-4 top-4 rounded-full border border-white/80 bg-white/85 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
                 Featured Collections
               </div>
-              <div className="grid gap-4 pt-8">
+              <div className="grid gap-4 pt-8 sm:grid-cols-2">
                 {previewCollections.map((collection) => (
                   <div
                     key={collection.key}
@@ -128,7 +128,7 @@ export function ExperimentEntry({ studyId, condition }: ExperimentEntryProps) {
             </h2>
           </div>
 
-          <div className="grid gap-5 xl:grid-cols-2">
+          <div className="grid gap-5 md:grid-cols-2">
             {previewCollections.map((collection) => (
               <CollectionCard key={collection.key} collection={collection} />
             ))}

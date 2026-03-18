@@ -1,8 +1,11 @@
 export type StorageMode = "mock" | "database";
 export type StudyId = "study1" | "study2";
 export type Condition = "control" | "treatment";
-export type CollectionKey = "pixelPaws" | "pixelPawsX" | "cyberWhales";
-export type CollectionArtVariant = CollectionKey;
+export type CollectionKey =
+  | "basedOnChainDinos"
+  | "tinyDinosEth"
+  | "goopTroop"
+  | "lilNouns";
 export type PageKind =
   | "intro"
   | "single-collection"
@@ -26,11 +29,8 @@ export type CollectionRecord = {
   createdDate: string;
   floorPrice: string;
   description: string;
-  artVariant: CollectionArtVariant;
-  themeTagline: string;
-  normalizationNote: string;
-  coverPalette: string[];
-  thumbnailPalette: string[];
+  imagePaths: string[];
+  imageSourceUrls: string[];
   sourceReferences: SourceReference[];
 };
 

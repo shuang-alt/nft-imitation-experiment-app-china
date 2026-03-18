@@ -1,71 +1,125 @@
 {
-  "pixelPaws": {
-    "key": "pixelPaws",
-    "name": "PixelPaws",
-    "creator": "Nova Studio",
-    "createdDate": "March 2021",
-    "floorPrice": "0.42 ETH",
-    "description": "A collection of pixel-style animal NFTs.",
-    "artVariant": "pixelPaws",
-    "themeTagline": "Retro animal collectibles with a playful pixel-market vibe.",
-    "normalizationNote": "Display metadata is normalized to the experimental specification. Visual references were aligned to public OpenSea pixel-pet collections and then re-rendered as original mock artwork for the study UI.",
-    "coverPalette": ["#f59e0b", "#fb7185", "#2563eb"],
-    "thumbnailPalette": ["#fee2e2", "#fde68a", "#dbeafe", "#dcfce7"],
+  "basedOnChainDinos": {
+    "key": "basedOnChainDinos",
+    "name": "Based OnChain Dinos",
+    "creator": "ApexDeployerBase",
+    "createdDate": "Jan 2024",
+    "floorPrice": "0.0135 ETH",
+    "description": "Based OnChain Dinos is a collection of 2000 NFTs, each randomly generated and distinctly determined at the time of minting.",
+    "imagePaths": [
+      "/collections/based-onchain-dinos/104.png",
+      "/collections/based-onchain-dinos/511.png",
+      "/collections/based-onchain-dinos/662.png",
+      "/collections/based-onchain-dinos/1111.png",
+      "/collections/based-onchain-dinos/1482.png",
+      "/collections/based-onchain-dinos/1620.png"
+    ],
+    "imageSourceUrls": [
+      "https://opensea.io/item/base/0xd4c5292b9689238f0a51c8505b1d1d6714ce95a0/104/opengraph-image",
+      "https://opensea.io/item/base/0xd4c5292b9689238f0a51c8505b1d1d6714ce95a0/511/opengraph-image",
+      "https://opensea.io/item/base/0xd4c5292b9689238f0a51c8505b1d1d6714ce95a0/662/opengraph-image",
+      "https://opensea.io/item/base/0xd4c5292b9689238f0a51c8505b1d1d6714ce95a0/1111/opengraph-image",
+      "https://opensea.io/item/base/0xd4c5292b9689238f0a51c8505b1d1d6714ce95a0/1482/opengraph-image",
+      "https://opensea.io/item/base/0xd4c5292b9689238f0a51c8505b1d1d6714ce95a0/1620/opengraph-image"
+    ],
     "sourceReferences": [
       {
-        "title": "PIXEL PAWS NFT - Collection | OpenSea",
-        "url": "https://opensea.io/collection/pixel-paws-nft",
-        "note": "Primary public reference for pixel-pet composition, pixel-animal naming cues, and collection page visual rhythm."
-      },
-      {
-        "title": "PixelPaw R02792 - pixelpawsnft | OpenSea",
-        "url": "https://opensea.io/item/polygon/0x2953399124f0cbb46d2cbacd8a89cf0599974963/69805133742680201073878810953015015342123326143908381636191461620524265766913",
-        "note": "Secondary item-level reference for close-up pixel-cat traits and detail-page presentation."
+        "title": "Based OnChain Dinos | OpenSea",
+        "url": "https://opensea.io/collection/based-onchain-dinos",
+        "note": "Public collection page used for collection metadata and title alignment."
       }
     ]
   },
-  "pixelPawsX": {
-    "key": "pixelPawsX",
-    "name": "PixelPaws X",
-    "creator": "Neo Studio",
-    "createdDate": "September 2022",
-    "floorPrice": "0.35 ETH",
-    "description": "A collection of pixel-style animal NFTs inspired by the recent pixel animal trend.",
-    "artVariant": "pixelPawsX",
-    "themeTagline": "A brighter sequel aesthetic shaped around the later pixel-animal trend cycle.",
-    "normalizationNote": "The experimental label PixelPaws X is retained even though the final card art is a normalized mock asset. Styling references come from public OpenSea pixel collections launched around 2022, then re-authored for consistency with the study design.",
-    "coverPalette": ["#14b8a6", "#38bdf8", "#818cf8"],
-    "thumbnailPalette": ["#ccfbf1", "#dbeafe", "#e0e7ff", "#fef3c7"],
+  "tinyDinosEth": {
+    "key": "tinyDinosEth",
+    "name": "tiny dinos (eth)",
+    "creator": "0xTinyEthereum",
+    "createdDate": "Apr 2022",
+    "floorPrice": "0.0087 ETH",
+    "description": "tiny dinos (eth) is a collection of 8,966 NFTs.",
+    "imagePaths": [
+      "/collections/tiny-dinos-eth/6859.png",
+      "/collections/tiny-dinos-eth/3360.png",
+      "/collections/tiny-dinos-eth/8808.png",
+      "/collections/tiny-dinos-eth/3662.png",
+      "/collections/tiny-dinos-eth/9221.png",
+      "/collections/tiny-dinos-eth/7134.png"
+    ],
+    "imageSourceUrls": [
+      "https://opensea.io/item/ethereum/0xd9b78a2f1dafc8bb9c60961790d2beefebee56f4/6859/opengraph-image",
+      "https://opensea.io/item/ethereum/0xd9b78a2f1dafc8bb9c60961790d2beefebee56f4/3360/opengraph-image",
+      "https://opensea.io/item/ethereum/0xd9b78a2f1dafc8bb9c60961790d2beefebee56f4/8808/opengraph-image",
+      "https://opensea.io/item/ethereum/0xd9b78a2f1dafc8bb9c60961790d2beefebee56f4/3662/opengraph-image",
+      "https://opensea.io/item/ethereum/0xd9b78a2f1dafc8bb9c60961790d2beefebee56f4/9221/opengraph-image",
+      "https://opensea.io/item/ethereum/0xd9b78a2f1dafc8bb9c60961790d2beefebee56f4/7134/opengraph-image"
+    ],
     "sourceReferences": [
       {
-        "title": "Pixelady Maker - Collection | OpenSea",
-        "url": "https://opensea.io/collection/pixeladymaker",
-        "note": "Used as a 2022 pixel-style reference for later-wave pixel collection presentation and UI mood."
-      },
-      {
-        "title": "Mars Cats Voyage - Collection | OpenSea",
-        "url": "https://opensea.io/collection/marscatsvoyage",
-        "note": "Used as a supporting public reference for stylized cat-themed PFP grids and thumbnail density."
+        "title": "tiny dinos (eth) | OpenSea",
+        "url": "https://opensea.io/collection/tiny-dinos-eth",
+        "note": "Public collection page used for collection metadata and title alignment."
       }
     ]
   },
-  "cyberWhales": {
-    "key": "cyberWhales",
-    "name": "CyberWhales",
-    "creator": "Lunar Mint",
-    "createdDate": "September 2022",
-    "floorPrice": "0.38 ETH",
-    "description": "A collection of futuristic whale-themed NFTs with a science-fiction visual style.",
-    "artVariant": "cyberWhales",
-    "themeTagline": "Sci-fi whale avatars with metallic gradients and deep-ocean neon lighting.",
-    "normalizationNote": "CyberWhales is presented with experiment-specific metadata. Artwork direction was normalized from public whale-themed OpenSea references and re-rendered as original mock assets so all collections share one coherent marketplace language.",
-    "coverPalette": ["#0f172a", "#0ea5e9", "#67e8f9"],
-    "thumbnailPalette": ["#cffafe", "#bfdbfe", "#ddd6fe", "#e2e8f0"],
+  "goopTroop": {
+    "key": "goopTroop",
+    "name": "GOOP TROOP",
+    "creator": "goopdao.eth",
+    "createdDate": "Aug 2021",
+    "floorPrice": "0.0014 ETH",
+    "description": "GOOP TROOP: GOOFY OVERSIZED OPTICS PEOPLE.",
+    "imagePaths": [
+      "/collections/goop-troop/912.png",
+      "/collections/goop-troop/1234.png",
+      "/collections/goop-troop/3715.png",
+      "/collections/goop-troop/4313.png",
+      "/collections/goop-troop/7059.png",
+      "/collections/goop-troop/7675.png"
+    ],
+    "imageSourceUrls": [
+      "https://opensea.io/item/ethereum/0x15a2d6c2b4b9903c27f50cb8b32160ab17f186e2/912/opengraph-image",
+      "https://opensea.io/item/ethereum/0x15a2d6c2b4b9903c27f50cb8b32160ab17f186e2/1234/opengraph-image",
+      "https://opensea.io/item/ethereum/0x15a2d6c2b4b9903c27f50cb8b32160ab17f186e2/3715/opengraph-image",
+      "https://opensea.io/item/ethereum/0x15a2d6c2b4b9903c27f50cb8b32160ab17f186e2/4313/opengraph-image",
+      "https://opensea.io/item/ethereum/0x15a2d6c2b4b9903c27f50cb8b32160ab17f186e2/7059/opengraph-image",
+      "https://opensea.io/item/ethereum/0x15a2d6c2b4b9903c27f50cb8b32160ab17f186e2/7675/opengraph-image"
+    ],
     "sourceReferences": [
       {
-        "title": "Secret Society of Whales - Collection | OpenSea",
-        "url": "https://opensea.io/collection/secretsocietyofwhales",
-        "note": "Primary public whale-collection reference for marine silhouette motifs and collection page composition."
+        "title": "GOOP TROOP | OpenSea",
+        "url": "https://opensea.io/collection/goop-troop",
+        "note": "Public collection page used for collection metadata and title alignment."
+      }
+    ]
+  },
+  "lilNouns": {
+    "key": "lilNouns",
+    "name": "Lil Nouns",
+    "creator": "lilnouns.eth / LilNounsDaoEthereum",
+    "createdDate": "May 2022",
+    "floorPrice": "0.019 ETH",
+    "description": "One Lil Noun, every 15 minutes, forever.",
+    "imagePaths": [
+      "/collections/lil-nouns/1.png",
+      "/collections/lil-nouns/26.png",
+      "/collections/lil-nouns/512.png",
+      "/collections/lil-nouns/1714.png",
+      "/collections/lil-nouns/3000.png",
+      "/collections/lil-nouns/7917.png"
+    ],
+    "imageSourceUrls": [
+      "https://opensea.io/item/ethereum/0x4b10701bfd7bfedc47d50562b76b436fbb5bdb3b/1/opengraph-image",
+      "https://opensea.io/item/ethereum/0x4b10701bfd7bfedc47d50562b76b436fbb5bdb3b/26/opengraph-image",
+      "https://opensea.io/item/ethereum/0x4b10701bfd7bfedc47d50562b76b436fbb5bdb3b/512/opengraph-image",
+      "https://opensea.io/item/ethereum/0x4b10701bfd7bfedc47d50562b76b436fbb5bdb3b/1714/opengraph-image",
+      "https://opensea.io/item/ethereum/0x4b10701bfd7bfedc47d50562b76b436fbb5bdb3b/3000/opengraph-image",
+      "https://opensea.io/item/ethereum/0x4b10701bfd7bfedc47d50562b76b436fbb5bdb3b/7917/opengraph-image"
+    ],
+    "sourceReferences": [
+      {
+        "title": "Lil Nouns | OpenSea",
+        "url": "https://opensea.io/collection/lil-nouns",
+        "note": "Public collection page used for collection metadata and title alignment."
       }
     ]
   }

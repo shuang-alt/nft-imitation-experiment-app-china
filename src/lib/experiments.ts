@@ -66,19 +66,27 @@ export const studyMetadata: Record<StudyId, StudyMetadata> = {
 };
 
 export const featuredCollectionKeys: CollectionKey[] = [
-  "pixelPaws",
-  "pixelPawsX",
-  "cyberWhales",
+  "tinyDinosEth",
+  "basedOnChainDinos",
+  "goopTroop",
+  "lilNouns",
+];
+
+const marketplaceEntryCollections: CollectionKey[] = [
+  "tinyDinosEth",
+  "basedOnChainDinos",
+  "goopTroop",
+  "lilNouns",
 ];
 
 const entryPreviewCollections: Record<
   `${StudyId}-${Condition}`,
   CollectionKey[]
 > = {
-  "study1-control": ["cyberWhales", "pixelPaws"],
-  "study1-treatment": ["pixelPawsX", "pixelPaws"],
-  "study2-control": ["pixelPaws", "cyberWhales"],
-  "study2-treatment": ["pixelPaws", "pixelPawsX"],
+  "study1-control": marketplaceEntryCollections,
+  "study1-treatment": marketplaceEntryCollections,
+  "study2-control": marketplaceEntryCollections,
+  "study2-treatment": marketplaceEntryCollections,
 };
 
 export function isStudyId(value: string): value is StudyId {
@@ -169,7 +177,7 @@ function buildStudy1Pages(condition: Condition): ResolvedStudyPage[] {
         "本研究仅用于学术研究，所有回答将匿名处理。",
         "请点击“下一页”继续。",
       ],
-      sidebarCollectionKeys: [condition === "control" ? "cyberWhales" : "pixelPawsX"],
+      sidebarCollectionKeys: [condition === "control" ? "goopTroop" : "basedOnChainDinos"],
     },
     {
       kind: "single-collection",
@@ -179,25 +187,25 @@ function buildStudy1Pages(condition: Condition): ResolvedStudyPage[] {
         "请想象你正在浏览一个 NFT marketplace。",
         "下面展示的是平台上的一个 NFT collection。",
       ],
-      collectionKey: condition === "control" ? "cyberWhales" : "pixelPawsX",
+      collectionKey: condition === "control" ? "goopTroop" : "basedOnChainDinos",
       footerLines: [
         "请根据平时浏览 NFT marketplace 的习惯查看以上信息。",
         "点击“下一页”继续。",
       ],
-      sidebarCollectionKeys: [condition === "control" ? "cyberWhales" : "pixelPawsX"],
+      sidebarCollectionKeys: [condition === "control" ? "goopTroop" : "basedOnChainDinos"],
     },
     {
       kind: "single-collection",
       pageNumber: 3,
       pageVersion: "study1-page3-v1",
       introLines: ["现在请继续浏览下面这个 NFT collection。"],
-      collectionKey: "pixelPaws",
-      collectionNameOverride: "PixelPaws",
+      collectionKey: "tinyDinosEth",
+      collectionNameOverride: "tiny dinos (eth)",
       footerLines: [
         "请根据你对这个 NFT collection 的印象，在接下来的问题中作答。",
         "点击“下一页”继续。",
       ],
-      sidebarCollectionKeys: ["pixelPaws"],
+      sidebarCollectionKeys: ["tinyDinosEth"],
     },
     {
       kind: "likert",
@@ -222,7 +230,7 @@ function buildStudy1Pages(condition: Condition): ResolvedStudyPage[] {
         "attention_4",
         "attention_5",
       ],
-      sidebarCollectionKeys: ["pixelPaws"],
+      sidebarCollectionKeys: ["tinyDinosEth"],
     },
     {
       kind: "likert",
@@ -242,7 +250,7 @@ function buildStudy1Pages(condition: Condition): ResolvedStudyPage[] {
         "purchase_interest_3",
         "purchase_interest_4",
       ],
-      sidebarCollectionKeys: ["pixelPaws"],
+      sidebarCollectionKeys: ["tinyDinosEth"],
     },
     {
       kind: "likert",
@@ -267,8 +275,8 @@ function buildStudy1Pages(condition: Condition): ResolvedStudyPage[] {
         "relationship_6",
       ],
       sidebarCollectionKeys: [
-        "pixelPaws",
-        condition === "control" ? "cyberWhales" : "pixelPawsX",
+        "tinyDinosEth",
+        condition === "control" ? "goopTroop" : "basedOnChainDinos",
       ],
     },
     {
@@ -288,7 +296,7 @@ function buildStudy1Pages(condition: Condition): ResolvedStudyPage[] {
       ],
       demographicSectionTitle: "基本信息：",
       demographicFields,
-      sidebarCollectionKeys: ["pixelPaws"],
+      sidebarCollectionKeys: ["tinyDinosEth"],
     },
   ];
 }
@@ -307,7 +315,10 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
         "本研究仅用于学术研究，所有回答将匿名处理。",
         "请点击“下一页”继续。",
       ],
-      sidebarCollectionKeys: ["pixelPaws", condition === "control" ? "cyberWhales" : "pixelPawsX"],
+      sidebarCollectionKeys: [
+        "tinyDinosEth",
+        condition === "control" ? "goopTroop" : "basedOnChainDinos",
+      ],
     },
     {
       kind: "dual-collection",
@@ -318,8 +329,8 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
         "以下是平台上展示的两个 NFT collection。",
       ],
       collectionKeys: [
-        "pixelPaws",
-        condition === "control" ? "cyberWhales" : "pixelPawsX",
+        "tinyDinosEth",
+        condition === "control" ? "goopTroop" : "basedOnChainDinos",
       ],
       collectionLabels: ["Collection 1", "Collection 2"],
       footerLines: [
@@ -327,8 +338,8 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
         "点击“下一页”继续。",
       ],
       sidebarCollectionKeys: [
-        "pixelPaws",
-        condition === "control" ? "cyberWhales" : "pixelPawsX",
+        "tinyDinosEth",
+        condition === "control" ? "goopTroop" : "basedOnChainDinos",
       ],
     },
     {
@@ -350,8 +361,8 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
         "pair_impression_4",
       ],
       sidebarCollectionKeys: [
-        "pixelPaws",
-        condition === "control" ? "cyberWhales" : "pixelPawsX",
+        "tinyDinosEth",
+        condition === "control" ? "goopTroop" : "basedOnChainDinos",
       ],
     },
     {
@@ -374,7 +385,7 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
         "attention_4",
         "attention_5",
       ],
-      sidebarCollectionKeys: ["pixelPaws"],
+      sidebarCollectionKeys: ["tinyDinosEth"],
     },
     {
       kind: "likert",
@@ -394,7 +405,7 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
         "purchase_interest_3",
         "purchase_interest_4",
       ],
-      sidebarCollectionKeys: ["pixelPaws"],
+      sidebarCollectionKeys: ["tinyDinosEth"],
     },
     {
       kind: "likert",
@@ -415,8 +426,8 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
         "substitution_4",
       ],
       sidebarCollectionKeys: [
-        "pixelPaws",
-        condition === "control" ? "cyberWhales" : "pixelPawsX",
+        "tinyDinosEth",
+        condition === "control" ? "goopTroop" : "basedOnChainDinos",
       ],
     },
     {
@@ -436,7 +447,7 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
       ],
       demographicSectionTitle: "基本信息：",
       demographicFields,
-      sidebarCollectionKeys: ["pixelPaws"],
+      sidebarCollectionKeys: ["tinyDinosEth"],
     },
   ];
 }

@@ -242,24 +242,24 @@ GitHub 仓库需要以下 Actions secrets：
 
 - [src/lib/experiments.ts](/Users/uk5y/Documents/New%20project%202/nft-imitation-experiment-app/src/lib/experiments.ts)
 
-## Public References vs Mock Assets
+## Public References vs Localized Assets
 
 ### Public references used
 
-- `PixelPaws`
-  - [PIXEL PAWS NFT - Collection | OpenSea](https://opensea.io/collection/pixel-paws-nft)
-  - [PixelPaw R02792 - pixelpawsnft | OpenSea](https://opensea.io/item/polygon/0x2953399124f0cbb46d2cbacd8a89cf0599974963/69805133742680201073878810953015015342123326143908381636191461620524265766913)
-- `PixelPaws X`
-  - [Pixelady Maker - Collection | OpenSea](https://opensea.io/collection/pixeladymaker)
-  - [Mars Cats Voyage - Collection | OpenSea](https://opensea.io/collection/marscatsvoyage)
-- `CyberWhales`
-  - [Secret Society of Whales - Collection | OpenSea](https://opensea.io/collection/secretsocietyofwhales)
+- `Based OnChain Dinos`
+  - [Based OnChain Dinos | OpenSea](https://opensea.io/collection/based-onchain-dinos)
+- `tiny dinos (eth)`
+  - [tiny dinos (eth) | OpenSea](https://opensea.io/collection/tiny-dinos-eth)
+- `GOOP TROOP`
+  - [GOOP TROOP | OpenSea](https://opensea.io/collection/goop-troop)
+- `Lil Nouns`
+  - [Lil Nouns | OpenSea](https://opensea.io/collection/lil-nouns)
 
-### What is normalized / mocked
+### What is localized / normalized
 
-- `PixelPaws / PixelPaws X / CyberWhales` 的最终实验展示 metadata 使用了实验规范中的固定字段
-- 页面中的 artwork、thumbnail、cover visuals 为程序生成的统一 mock assets
-- 视觉风格参考来自公开页面，但页面组件和 artwork 均为原创实现，不直接复制 OpenSea UI
+- 4 个 collection 的最终实验展示 metadata 使用了实验规范中的固定字段
+- 页面中的 artwork 先从公开 OpenSea item 页抓取，再下载到本地 `public/collections/*`
+- 为适配 6 图网格，本地静态图片对 OpenSea 宽幅 OG 图做了左侧正方裁切
 
 ## Project Structure
 
