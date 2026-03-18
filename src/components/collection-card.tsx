@@ -10,7 +10,6 @@ type CollectionCardProps = {
   label?: string;
   nameOverride?: string;
   density?: "default" | "compact";
-  metricsLayout?: "full" | "single";
 };
 
 export function CollectionCard({
@@ -18,10 +17,8 @@ export function CollectionCard({
   label,
   nameOverride,
   density = "default",
-  metricsLayout = "full",
 }: CollectionCardProps) {
   const compact = density === "compact";
-  const singleMetric = metricsLayout === "single";
 
   return (
     <article
@@ -47,15 +44,7 @@ export function CollectionCard({
               >
                 {nameOverride ?? collection.name}
               </h3>
-              <div className="mt-1 flex flex-wrap items-center gap-2 text-xs font-medium text-slate-500">
-                <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1">
-                  Created: {collection.createdDate}
-                </span>
-                <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1">
-                  Floor: {collection.floorPrice}
-                </span>
-              </div>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+              <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-600">
                 {collection.themeTagline}
               </p>
             </div>
@@ -68,12 +57,7 @@ export function CollectionCard({
 
         <CollectionArt variant={collection.artVariant} />
 
-        <div
-          className={cn(
-            "grid gap-3",
-            singleMetric ? "mx-auto max-w-sm md:max-w-md" : "md:grid-cols-3",
-          )}
-        >
+        <div className="grid gap-3 md:grid-cols-3">
           <div className="rounded-[24px] border border-slate-100 bg-slate-50/80 p-4">
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
               <UserRound className="h-4 w-4" />
@@ -81,24 +65,20 @@ export function CollectionCard({
             </div>
             <p className="mt-2 text-sm font-semibold text-slate-900">{collection.creator}</p>
           </div>
-          {!singleMetric ? (
-            <>
-              <div className="rounded-[24px] border border-slate-100 bg-slate-50/80 p-4">
-                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                  <CalendarDays className="h-4 w-4" />
-                  Created Date
-                </div>
-                <p className="mt-2 text-sm font-semibold text-slate-900">{collection.createdDate}</p>
-              </div>
-              <div className="rounded-[24px] border border-slate-100 bg-slate-50/80 p-4">
-                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                  <Gem className="h-4 w-4" />
-                  Floor Price
-                </div>
-                <p className="mt-2 text-sm font-semibold text-slate-900">{collection.floorPrice}</p>
-              </div>
-            </>
-          ) : null}
+          <div className="rounded-[24px] border border-slate-100 bg-slate-50/80 p-4">
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+              <CalendarDays className="h-4 w-4" />
+              Created Date
+            </div>
+            <p className="mt-2 text-sm font-semibold text-slate-900">{collection.createdDate}</p>
+          </div>
+          <div className="rounded-[24px] border border-slate-100 bg-slate-50/80 p-4">
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+              <Gem className="h-4 w-4" />
+              Floor Price
+            </div>
+            <p className="mt-2 text-sm font-semibold text-slate-900">{collection.floorPrice}</p>
+          </div>
         </div>
 
         <div className="rounded-[24px] border border-slate-100 bg-slate-50/70 p-4">

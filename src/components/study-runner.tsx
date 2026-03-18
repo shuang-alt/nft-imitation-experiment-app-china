@@ -249,8 +249,6 @@ function StudyPageContent({
   }
 
   function renderMainContent() {
-    const earlyPageCardLayout = page.pageNumber <= 3 ? "single" : "full";
-
     if (page.kind === "intro") {
       return (
         <div className="space-y-5">
@@ -275,11 +273,7 @@ function StudyPageContent({
               </p>
             ))}
           </div>
-          <CollectionCard
-            collection={collection}
-            nameOverride={page.collectionNameOverride}
-            metricsLayout={earlyPageCardLayout}
-          />
+          <CollectionCard collection={collection} nameOverride={page.collectionNameOverride} />
           <div className="space-y-2">
             {page.footerLines.map((line) => (
               <p key={line} className="text-sm leading-7 text-slate-600">
@@ -307,7 +301,6 @@ function StudyPageContent({
                 key={`${collectionKey}-${index}`}
                 collection={getCollectionRecord(collectionKey)}
                 label={page.collectionLabels[index]}
-                metricsLayout={earlyPageCardLayout}
               />
             ))}
           </div>
@@ -533,7 +526,6 @@ function StudyPageContent({
                 key={`${collectionKey}-${index}`}
                 collection={getCollectionRecord(collectionKey)}
                 density="compact"
-                metricsLayout={page.pageNumber <= 3 ? "single" : "full"}
               />
             ))}
           </aside>
