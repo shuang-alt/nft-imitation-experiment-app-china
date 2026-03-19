@@ -11,7 +11,6 @@ import type {
 
 const collections = collectionData as Record<CollectionKey, CollectionRecord>;
 
-const sevenPointScaleLabel = "1 = 非常不同意，7 = 非常同意";
 const fivePointScaleLabel = "1 = 非常不同意，5 = 非常同意";
 
 const nftExperienceItems = [
@@ -329,7 +328,7 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
     {
       kind: "intro",
       pageNumber: 1,
-      pageVersion: "study2-page1-v1",
+      pageVersion: "study2-page1-v2",
       paragraphs: [
         "感谢您参与本研究。",
         "本研究旨在了解用户在浏览 NFT marketplace（数字藏品平台）时的看法与决策过程。",
@@ -346,18 +345,22 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
     {
       kind: "dual-collection",
       pageNumber: 2,
-      pageVersion: "study2-page2-v1",
+      pageVersion: "study2-page2-v2",
       introLines: [
         "请想象你正在浏览一个 NFT marketplace。",
         "以下是平台上展示的两个 NFT collection。",
+        "请认真查看本页展示的信息，后续问题将涉及您刚才浏览页面中的具体内容，请根据页面信息作答。",
       ],
       collectionKeys: [
         "tinyDinosEth",
         condition === "control" ? "goopTroop" : "basedOnChainDinos",
       ],
-      collectionLabels: ["Collection 1", "Collection 2"],
+      collectionLabels: ["第一个 NFT collection", "第二个 NFT collection"],
+      cardImageCount: 3,
+      metadataEmphasis: true,
       footerLines: [
         "请像平时浏览 NFT marketplace 一样查看这些信息。",
+        "请根据您刚才浏览过的两个 NFT collection 的印象，在接下来的问题中作答。",
         "点击“下一页”继续。",
       ],
       sidebarCollectionKeys: [
@@ -366,61 +369,70 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
       ],
     },
     {
-      kind: "likert",
+      kind: "single-choice",
       pageNumber: 3,
-      pageVersion: "study2-page3-v1",
-      introLines: ["以下问题是关于刚才看到的两个 NFT collection。"],
-      scaleLabel: sevenPointScaleLabel,
-      items: [
-        "这两个 NFT collection 风格相似",
-        "这两个 NFT collection 看起来属于相似主题",
-        "其中一个 NFT collection 看起来像是在模仿另一个",
-        "根据页面信息，tiny dinos (eth) 似乎比另一个 collection 更早出现",
+      pageVersion: "study2-page3-v2",
+      introLines: [
+        "以下问题是关于刚才浏览的两个 NFT collection 的关系判断。",
+        "请根据您刚才看到的页面信息，选择最符合您判断的一项。",
+        "其中，第一个 NFT collection 和第二个 NFT collection 分别对应您刚才浏览页面中的左侧与右侧集合。",
       ],
-      answerKeys: [
-        "pair_impression_1",
-        "pair_impression_2",
-        "pair_impression_3",
-        "pair_impression_4",
-      ],
-      sidebarCollectionKeys: [
-        "tinyDinosEth",
-        condition === "control" ? "goopTroop" : "basedOnChainDinos",
+      question: "您认为刚才看到的两个 NFT collection 中，哪一个在模仿另一个？",
+      answerKey: "imitation_direction_2",
+      options: [
+        {
+          value: "first_imitates_second",
+          label: "第一个 NFT collection 在模仿第二个 NFT collection",
+        },
+        {
+          value: "second_imitates_first",
+          label: "第二个 NFT collection 在模仿第一个 NFT collection",
+        },
+        {
+          value: "no_imitation_relationship",
+          label: "我认为两者之间不存在模仿关系",
+        },
       ],
     },
     {
       kind: "likert",
       pageNumber: 4,
-      pageVersion: "study2-page4-v1",
-      introLines: ["接下来的问题是关于 tiny dinos (eth) collection。"],
-      scaleLabel: sevenPointScaleLabel,
+      pageVersion: "study2-page4-v2",
+      introLines: [
+        "以下问题是关于刚才浏览的第一个 NFT collection。",
+        "请根据您的真实感受回答。",
+        "这里的第一个 NFT collection 指您刚才在上一页首先看到的 collection。",
+      ],
+      scaleLabel: fivePointScaleLabel,
       items: [
-        "tiny dinos (eth) 吸引了我的注意",
-        "tiny dinos (eth) 在页面中比较显眼",
-        "浏览页面后，我对 tiny dinos (eth) 更感兴趣",
-        "我想进一步了解 tiny dinos (eth) collection",
-        "tiny dinos (eth) 给我留下了较深的印象",
+        "第一个 NFT collection 吸引了我的注意",
+        "浏览页面后，我对第一个 NFT collection 更感兴趣",
+        "我想进一步了解第一个 NFT collection",
+        "第一个 NFT collection 给我留下了较深的印象",
       ],
-      answerKeys: [
-        "attention_1",
-        "attention_2",
-        "attention_3",
-        "attention_4",
-        "attention_5",
+      answerKeys: ["awareness_1", "awareness_2", "awareness_3", "awareness_4"],
+      questionStyle: "matrix-stars",
+      sidebarCollectionKeys: [
+        "tinyDinosEth",
+        condition === "control" ? "goopTroop" : "basedOnChainDinos",
       ],
-      sidebarCollectionKeys: ["tinyDinosEth"],
+      sidebarImageCount: 3,
+      showStudySnapshot: false,
     },
     {
       kind: "likert",
       pageNumber: 5,
-      pageVersion: "study2-page5-v1",
-      introLines: ["以下问题仍然关于 tiny dinos (eth) collection。"],
-      scaleLabel: sevenPointScaleLabel,
+      pageVersion: "study2-page5-v2",
+      introLines: [
+        "以下问题仍然关于刚才浏览的第一个 NFT collection。",
+        "这里的第一个 NFT collection 指您刚才首先看到的 collection。",
+      ],
+      scaleLabel: fivePointScaleLabel,
       items: [
-        "我会考虑购买 tiny dinos (eth) collection 的 NFT",
-        "我对购买 tiny dinos (eth) NFT 感兴趣",
-        "tiny dinos (eth) 是一个值得考虑购买的 NFT collection",
-        "如果价格合适，我愿意购买 tiny dinos (eth) collection 的 NFT",
+        "我会考虑购买第一个 NFT collection 的 NFT",
+        "我对购买第一个 NFT collection 的 NFT 感兴趣",
+        "第一个 NFT collection 是一个值得考虑购买的 NFT collection",
+        "如果价格合适，我愿意购买第一个 NFT collection 的 NFT",
       ],
       answerKeys: [
         "purchase_interest_1",
@@ -428,37 +440,49 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
         "purchase_interest_3",
         "purchase_interest_4",
       ],
-      sidebarCollectionKeys: ["tinyDinosEth"],
+      questionStyle: "matrix-stars",
+      sidebarCollectionKeys: [
+        "tinyDinosEth",
+        condition === "control" ? "goopTroop" : "basedOnChainDinos",
+      ],
+      sidebarImageCount: 3,
+      showStudySnapshot: false,
     },
     {
       kind: "likert",
       pageNumber: 6,
-      pageVersion: "study2-page6-v1",
-      introLines: ["以下问题仍然围绕 tiny dinos (eth) 与另一个 NFT collection 的关系。"],
-      scaleLabel: sevenPointScaleLabel,
+      pageVersion: "study2-page6-v2",
+      introLines: [
+        "以下问题是关于刚才浏览的第一个 NFT collection 与第二个 NFT collection 之间的关系。",
+        "其中，第一个 NFT collection 指您先看到的 collection，第二个 NFT collection 指随后看到的 collection。",
+      ],
+      scaleLabel: fivePointScaleLabel,
       items: [
-        "另一个 NFT collection 可以作为 tiny dinos (eth) 的替代",
-        "我可能会购买另一个 NFT collection 而不是 tiny dinos (eth)",
-        "另一个 NFT collection 降低了我对 tiny dinos (eth) 的购买兴趣",
-        "对我来说，另一个 NFT collection 与 tiny dinos (eth) 在功能上是可替代的",
+        "第二个 NFT collection 可以作为第一个 NFT collection 的替代",
+        "我可能会购买第二个 NFT collection，而不是第一个 NFT collection",
+        "第二个 NFT collection 降低了我对第一个 NFT collection 的购买兴趣",
+        "看完第二个 NFT collection 后，我不想再继续搜索第一个 NFT collection 的相关信息。",
       ],
       answerKeys: [
         "substitution_1",
         "substitution_2",
         "substitution_3",
-        "substitution_4",
+        "search_closure_1",
       ],
+      questionStyle: "matrix-stars",
       sidebarCollectionKeys: [
         "tinyDinosEth",
         condition === "control" ? "goopTroop" : "basedOnChainDinos",
       ],
+      sidebarImageCount: 3,
+      showStudySnapshot: false,
     },
     {
       kind: "demographics",
       pageNumber: 7,
-      pageVersion: "study2-page7-v1",
+      pageVersion: "study2-page7-v2",
       introLines: ["以下问题用于了解您的 NFT 使用经验。"],
-      scaleLabel: sevenPointScaleLabel,
+      scaleLabel: fivePointScaleLabel,
       items: nftExperienceItems,
       answerKeys: [
         "nft_experience_1",
@@ -468,9 +492,15 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
         "nft_experience_5",
         "nft_experience_6",
       ],
+      questionStyle: "matrix-stars",
       demographicSectionTitle: "基本信息：",
       demographicFields,
-      sidebarCollectionKeys: ["tinyDinosEth"],
+      sidebarCollectionKeys: [
+        "tinyDinosEth",
+        condition === "control" ? "goopTroop" : "basedOnChainDinos",
+      ],
+      sidebarImageCount: 3,
+      showStudySnapshot: false,
     },
   ];
 }

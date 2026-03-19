@@ -50,7 +50,7 @@ type StudyRunnerProps = {
 };
 
 function usesSingleColumnLayout(studyId: StudyId, pageNumber: number) {
-  return studyId === "study1" || (studyId === "study2" && pageNumber >= 1 && pageNumber <= 2);
+  return studyId === "study1" || (studyId === "study2" && pageNumber >= 1 && pageNumber <= 3);
 }
 
 function usesImmersiveTypography(studyId: StudyId, pageNumber: number) {
@@ -208,11 +208,9 @@ function StudyPageContent({
   const useSingleColumnLayout = usesSingleColumnLayout(studyId, pageNumber);
   const useImmersiveText = usesImmersiveTypography(studyId, pageNumber);
   const previousPath =
-    studyId === "study1"
-      ? pageNumber === 1
-        ? buildStudyEntryPath(studyId, condition)
-        : buildStudyPagePath(studyId, condition, pageNumber - 1)
-      : null;
+    pageNumber === 1
+      ? buildStudyEntryPath(studyId, condition)
+      : buildStudyPagePath(studyId, condition, pageNumber - 1);
   const paragraphClassName = cn(
     "text-base leading-8 text-slate-700 md:text-lg",
     useImmersiveText && "md:text-[1.1rem] md:leading-9",
@@ -363,19 +361,24 @@ function StudyPageContent({
               </p>
             ))}
           </div>
-          <div
-            className={cn(
-              "grid gap-5 xl:grid-cols-2",
-              useSingleColumnLayout && "gap-6 lg:grid-cols-2",
-            )}
-          >
-            {page.collectionKeys.map((collectionKey, index) => (
-              <CollectionCard
-                key={`${collectionKey}-${index}`}
-                collection={getCollectionRecord(collectionKey)}
-                label={page.collectionLabels[index]}
-              />
-            ))}
+          <div className="mx-auto w-full max-w-[74rem]">
+            <div
+              className={cn(
+                "grid gap-5 xl:grid-cols-2",
+                useSingleColumnLayout && "gap-6 lg:grid-cols-2",
+              )}
+            >
+              {page.collectionKeys.map((collectionKey, index) => (
+                <CollectionCard
+                  key={`${collectionKey}-${index}`}
+                  collection={getCollectionRecord(collectionKey)}
+                  label={page.collectionLabels[index]}
+                  imageCount={page.cardImageCount}
+                  metadataSize={page.metadataEmphasis ? "prominent" : "default"}
+                  className="h-full"
+                />
+              ))}
+            </div>
           </div>
           <div className="space-y-2">
             {page.footerLines.map((line) => (
@@ -583,7 +586,13 @@ function StudyPageContent({
           </div>
         </header>
 
-        <div className={cn("grid gap-6", !useSingleColumnLayout && "xl:grid-cols-[1.25fr_0.75fr]")}>
+        <div
+          className={cn(
+            "grid gap-6",
+            !useSingleColumnLayout &&
+              "xl:grid-cols-[minmax(0,1.32fr)_minmax(20rem,0.78fr)]",
+          )}
+        >
           <section
             className={cn(
               "rounded-[36px] border border-white/80 bg-white/82 p-6 shadow-[0_28px_90px_rgba(15,23,42,0.1)] backdrop-blur-xl md:p-8",
@@ -638,54 +647,57 @@ function StudyPageContent({
 
           {!useSingleColumnLayout ? (
             <aside className="space-y-5">
-              <section className="rounded-[32px] border border-white/80 bg-white/82 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.08)] backdrop-blur-xl">
-                <div className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
-                  Study Snapshot
-                </div>
-                <h2 className="mt-3 font-display text-2xl text-slate-950">
-                  {study.fullTitle}
-                </h2>
-                <dl className="mt-5 grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-[22px] border border-slate-100 bg-slate-50/80 p-4">
-                    <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                      Respondent
-                    </dt>
-                    <dd className="mt-2 text-sm font-semibold text-slate-900">
-                      {abbreviateRespondentId(session.respondentId)}
-                    </dd>
+              {page.showStudySnapshot !== false ? (
+                <section className="rounded-[32px] border border-white/80 bg-white/82 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.08)] backdrop-blur-xl">
+                  <div className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
+                    Study Snapshot
                   </div>
-                  <div className="rounded-[22px] border border-slate-100 bg-slate-50/80 p-4">
-                    <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                      Page
-                    </dt>
-                    <dd className="mt-2 text-sm font-semibold text-slate-900">
-                      {pageNumber} / {study.totalPages}
-                    </dd>
-                  </div>
-                  <div className="rounded-[22px] border border-slate-100 bg-slate-50/80 p-4">
-                    <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                      Progress
-                    </dt>
-                    <dd className="mt-2 text-sm font-semibold text-slate-900">
-                      {progressPercent}%
-                    </dd>
-                  </div>
-                  <div className="rounded-[22px] border border-slate-100 bg-slate-50/80 p-4">
-                    <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                      Privacy
-                    </dt>
-                    <dd className="mt-2 text-sm font-semibold text-slate-900">
-                      Anonymous
-                    </dd>
-                  </div>
-                </dl>
-              </section>
+                  <h2 className="mt-3 font-display text-2xl text-slate-950">
+                    {study.fullTitle}
+                  </h2>
+                  <dl className="mt-5 grid gap-3 sm:grid-cols-2">
+                    <div className="rounded-[22px] border border-slate-100 bg-slate-50/80 p-4">
+                      <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                        Respondent
+                      </dt>
+                      <dd className="mt-2 text-sm font-semibold text-slate-900">
+                        {abbreviateRespondentId(session.respondentId)}
+                      </dd>
+                    </div>
+                    <div className="rounded-[22px] border border-slate-100 bg-slate-50/80 p-4">
+                      <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                        Page
+                      </dt>
+                      <dd className="mt-2 text-sm font-semibold text-slate-900">
+                        {pageNumber} / {study.totalPages}
+                      </dd>
+                    </div>
+                    <div className="rounded-[22px] border border-slate-100 bg-slate-50/80 p-4">
+                      <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                        Progress
+                      </dt>
+                      <dd className="mt-2 text-sm font-semibold text-slate-900">
+                        {progressPercent}%
+                      </dd>
+                    </div>
+                    <div className="rounded-[22px] border border-slate-100 bg-slate-50/80 p-4">
+                      <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                        Privacy
+                      </dt>
+                      <dd className="mt-2 text-sm font-semibold text-slate-900">
+                        Anonymous
+                      </dd>
+                    </div>
+                  </dl>
+                </section>
+              ) : null}
 
               {page.sidebarCollectionKeys?.map((collectionKey, index) => (
                 <CollectionCard
                   key={`${collectionKey}-${index}`}
                   collection={getCollectionRecord(collectionKey)}
                   density="compact"
+                  imageCount={page.sidebarImageCount}
                 />
               ))}
             </aside>

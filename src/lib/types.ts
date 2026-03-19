@@ -41,6 +41,8 @@ type BasePage = {
   pageNumber: number;
   pageVersion: string;
   sidebarCollectionKeys?: CollectionKey[];
+  sidebarImageCount?: number;
+  showStudySnapshot?: boolean;
 };
 
 export type IntroPage = BasePage & {
@@ -65,6 +67,8 @@ export type DualCollectionPage = BasePage & {
   collectionKeys: [CollectionKey, CollectionKey];
   collectionLabels: [string, string];
   footerLines: string[];
+  cardImageCount?: number;
+  metadataEmphasis?: boolean;
 };
 
 export type SingleChoiceOption = {
