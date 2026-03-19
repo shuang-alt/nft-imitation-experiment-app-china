@@ -27,20 +27,9 @@ export function MatrixStarQuestionGroup({
       </div>
 
       <section className="overflow-hidden rounded-[32px] border border-white/80 bg-white/88 shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
-        <div className="hidden grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)] items-end gap-6 border-b border-slate-100 bg-slate-50/60 px-5 py-4 lg:grid">
-          <div className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+        <div className="hidden border-b border-slate-100 bg-slate-50/60 px-5 py-4 lg:block">
+          <div className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500 md:text-[0.95rem]">
             题项
-          </div>
-          <div className="grid grid-cols-5 gap-2">
-            {scaleValues.map((value) => (
-              <div
-                key={`matrix-header-${value}`}
-                className="flex flex-col items-center gap-1 rounded-2xl border border-slate-200 bg-white px-2 py-2 text-slate-500"
-              >
-                <Star className="h-4 w-4" />
-                <span className="text-xs font-semibold">{value}</span>
-              </div>
-            ))}
           </div>
         </div>
 
@@ -101,7 +90,7 @@ export function MatrixStarQuestionGroup({
         </div>
       </section>
 
-      <div className="flex items-center justify-between text-xs font-medium text-slate-500">
+      <div className="flex items-center justify-between text-sm font-medium text-slate-500 md:text-[0.95rem]">
         <span>非常不同意</span>
         <span>非常同意</span>
       </div>
