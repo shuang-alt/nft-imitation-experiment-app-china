@@ -39,6 +39,8 @@ import { abbreviateRespondentId, cn } from "@/lib/utils";
 
 import { CollectionCard } from "./collection-card";
 import { LikertQuestionGroup } from "./likert-question-group";
+import { MatrixStarQuestionGroup } from "./matrix-star-question-group";
+import { SingleChoiceQuestion } from "./single-choice-question";
 
 type StudyRunnerProps = {
   studyId: StudyId;
@@ -48,6 +50,10 @@ type StudyRunnerProps = {
 };
 
 function usesSingleColumnLayout(studyId: StudyId, pageNumber: number) {
+  return studyId === "study1" || (studyId === "study2" && pageNumber >= 1 && pageNumber <= 2);
+}
+
+function usesImmersiveTypography(studyId: StudyId, pageNumber: number) {
   return (
     (studyId === "study1" && pageNumber >= 1 && pageNumber <= 3) ||
     (studyId === "study2" && pageNumber >= 1 && pageNumber <= 2)
@@ -55,6 +61,10 @@ function usesSingleColumnLayout(studyId: StudyId, pageNumber: number) {
 }
 
 function isPageComplete(page: ResolvedStudyPage, answers: AnswerRecord) {
+  if (page.kind === "single-choice") {
+    return typeof answers[page.answerKey] === "string" && String(answers[page.answerKey]).length > 0;
+  }
+
   if (page.kind === "likert" || page.kind === "demographics") {
     const likertComplete = page.answerKeys.every(
       (answerKey) => typeof answers[answerKey] === "number",
@@ -196,9 +206,10 @@ function StudyPageContent({
   );
   const [errorMessage, setErrorMessage] = useState("");
   const useSingleColumnLayout = usesSingleColumnLayout(studyId, pageNumber);
+  const useImmersiveText = usesImmersiveTypography(studyId, pageNumber);
   const paragraphClassName = cn(
     "text-base leading-8 text-slate-700 md:text-lg",
-    useSingleColumnLayout && "md:text-[1.1rem] md:leading-9",
+    useImmersiveText && "md:text-[1.1rem] md:leading-9",
   );
 
   useEffect(() => {
@@ -296,6 +307,7 @@ function StudyPageContent({
 
     if (page.kind === "single-collection") {
       const collection = getCollectionRecord(page.collectionKey);
+      const useBrowsePresentation = page.cardPresentation === "study1-browse";
 
       return (
         <div className={cn("space-y-6", useSingleColumnLayout && "space-y-7")}>
@@ -306,7 +318,18 @@ function StudyPageContent({
               </p>
             ))}
           </div>
-          <CollectionCard collection={collection} nameOverride={page.collectionNameOverride} />
+          <div
+            className={cn(
+              useBrowsePresentation && "mx-auto w-full max-w-[56rem] md:w-[90%]",
+            )}
+          >
+            <CollectionCard
+              collection={collection}
+              nameOverride={page.collectionNameOverride}
+              imageCount={page.cardImageCount}
+              metadataSize={page.metadataEmphasis ? "prominent" : "default"}
+            />
+          </div>
           <div className="space-y-2">
             {page.footerLines.map((line) => (
               <p
@@ -365,7 +388,34 @@ function StudyPageContent({
       );
     }
 
+    if (page.kind === "single-choice") {
+      return (
+        <div className="space-y-8">
+          <div className="space-y-3">
+            {page.introLines.map((line) => (
+              <p key={line} className={paragraphClassName}>
+                {line}
+              </p>
+            ))}
+          </div>
+
+          <SingleChoiceQuestion
+            question={page.question}
+            answerKey={page.answerKey}
+            options={page.options}
+            values={answers}
+            onChange={(key, value) => setAnswers((current) => ({ ...current, [key]: value }))}
+          />
+        </div>
+      );
+    }
+
     if (page.kind === "likert") {
+      const QuestionGroup =
+        page.questionStyle === "matrix-stars"
+          ? MatrixStarQuestionGroup
+          : LikertQuestionGroup;
+
       return (
         <div className="space-y-6">
           <div className="space-y-3">
@@ -375,7 +425,7 @@ function StudyPageContent({
               </p>
             ))}
           </div>
-          <LikertQuestionGroup
+          <QuestionGroup
             items={page.items}
             answerKeys={page.answerKeys}
             values={answers}
@@ -385,6 +435,11 @@ function StudyPageContent({
         </div>
       );
     }
+
+    const QuestionGroup =
+      page.questionStyle === "matrix-stars"
+        ? MatrixStarQuestionGroup
+        : LikertQuestionGroup;
 
     return (
       <div className="space-y-8">
@@ -396,7 +451,7 @@ function StudyPageContent({
           ))}
         </div>
 
-        <LikertQuestionGroup
+        <QuestionGroup
           items={page.items}
           answerKeys={page.answerKeys}
           values={answers}

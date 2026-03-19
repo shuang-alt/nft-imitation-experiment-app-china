@@ -11,6 +11,8 @@ type CollectionCardProps = {
   nameOverride?: string;
   density?: "default" | "compact";
   layout?: "default" | "showcase";
+  imageCount?: number;
+  metadataSize?: "default" | "prominent";
   className?: string;
 };
 
@@ -20,10 +22,13 @@ export function CollectionCard({
   nameOverride,
   density = "default",
   layout = "default",
+  imageCount,
+  metadataSize = "default",
   className,
 }: CollectionCardProps) {
   const compact = density === "compact";
   const showcase = layout === "showcase";
+  const prominentMetadata = metadataSize === "prominent";
 
   return (
     <article
@@ -69,18 +74,25 @@ export function CollectionCard({
         <CollectionArt
           name={nameOverride ?? collection.name}
           imagePaths={collection.imagePaths}
+          imageCount={imageCount}
           className={cn(showcase && "gap-2.5")}
         />
 
         <div className="grid gap-3 sm:grid-cols-3">
           <div className="h-full rounded-[24px] border border-slate-100 bg-slate-50/80 p-4">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+            <div
+              className={cn(
+                "flex items-center gap-2 font-semibold uppercase tracking-[0.18em] text-slate-500",
+                prominentMetadata ? "text-[0.82rem]" : "text-xs",
+              )}
+            >
               <UserRound className="h-4 w-4" />
               Creator
             </div>
             <p
               className={cn(
-                "mt-2 break-words text-sm font-semibold leading-6 text-pretty text-slate-900",
+                "mt-2 break-words font-semibold leading-6 text-pretty text-slate-900",
+                prominentMetadata ? "text-base leading-7 md:text-lg" : "text-sm",
                 showcase && "line-clamp-2 min-h-[3rem]",
               )}
             >
@@ -88,20 +100,40 @@ export function CollectionCard({
             </p>
           </div>
           <div className="h-full rounded-[24px] border border-slate-100 bg-slate-50/80 p-4">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+            <div
+              className={cn(
+                "flex items-center gap-2 font-semibold uppercase tracking-[0.18em] text-slate-500",
+                prominentMetadata ? "text-[0.82rem]" : "text-xs",
+              )}
+            >
               <CalendarDays className="h-4 w-4" />
               Created Date
             </div>
-            <p className="mt-2 text-sm font-semibold leading-6 text-slate-900">
+            <p
+              className={cn(
+                "mt-2 font-semibold leading-6 text-slate-900",
+                prominentMetadata ? "text-base leading-7 md:text-lg" : "text-sm",
+              )}
+            >
               {collection.createdDate}
             </p>
           </div>
           <div className="h-full rounded-[24px] border border-slate-100 bg-slate-50/80 p-4">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+            <div
+              className={cn(
+                "flex items-center gap-2 font-semibold uppercase tracking-[0.18em] text-slate-500",
+                prominentMetadata ? "text-[0.82rem]" : "text-xs",
+              )}
+            >
               <Gem className="h-4 w-4" />
               Floor Price
             </div>
-            <p className="mt-2 text-sm font-semibold leading-6 text-slate-900">
+            <p
+              className={cn(
+                "mt-2 font-semibold leading-6 text-slate-900",
+                prominentMetadata ? "text-base leading-7 md:text-lg" : "text-sm",
+              )}
+            >
               {collection.floorPrice}
             </p>
           </div>
@@ -113,12 +145,18 @@ export function CollectionCard({
             showcase && "flex min-h-[8.9rem] flex-col",
           )}
         >
-          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+          <div
+            className={cn(
+              "font-semibold uppercase tracking-[0.18em] text-slate-500",
+              prominentMetadata ? "text-[0.82rem]" : "text-xs",
+            )}
+          >
             Description
           </div>
           <p
             className={cn(
-              "mt-2 text-sm leading-7 text-pretty text-slate-700",
+              "mt-2 text-pretty text-slate-700",
+              prominentMetadata ? "text-base leading-8" : "text-sm leading-7",
               showcase && "line-clamp-3 leading-6",
             )}
           >

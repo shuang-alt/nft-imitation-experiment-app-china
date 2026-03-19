@@ -10,8 +10,10 @@ export type PageKind =
   | "intro"
   | "single-collection"
   | "dual-collection"
+  | "single-choice"
   | "likert"
   | "demographics";
+export type QuestionScaleStyle = "buttons" | "matrix-stars";
 
 export type AnswerValue = string | number | boolean | null;
 export type AnswerRecord = Record<string, AnswerValue>;
@@ -52,6 +54,9 @@ export type SingleCollectionPage = BasePage & {
   collectionKey: CollectionKey;
   collectionNameOverride?: string;
   footerLines: string[];
+  cardImageCount?: number;
+  metadataEmphasis?: boolean;
+  cardPresentation?: "default" | "study1-browse";
 };
 
 export type DualCollectionPage = BasePage & {
@@ -62,12 +67,26 @@ export type DualCollectionPage = BasePage & {
   footerLines: string[];
 };
 
+export type SingleChoiceOption = {
+  value: string;
+  label: string;
+};
+
+export type SingleChoicePage = BasePage & {
+  kind: "single-choice";
+  introLines: string[];
+  question: string;
+  answerKey: string;
+  options: SingleChoiceOption[];
+};
+
 export type LikertPage = BasePage & {
   kind: "likert";
   introLines: string[];
   scaleLabel: string;
   items: string[];
   answerKeys: string[];
+  questionStyle?: QuestionScaleStyle;
 };
 
 export type DemographicField = {
@@ -83,6 +102,7 @@ export type DemographicsPage = BasePage & {
   scaleLabel: string;
   items: string[];
   answerKeys: string[];
+  questionStyle?: QuestionScaleStyle;
   demographicSectionTitle: string;
   demographicFields: DemographicField[];
 };
@@ -91,6 +111,7 @@ export type ResolvedStudyPage =
   | IntroPage
   | SingleCollectionPage
   | DualCollectionPage
+  | SingleChoicePage
   | LikertPage
   | DemographicsPage;
 
