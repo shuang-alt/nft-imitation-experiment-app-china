@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore, useTransition } from "react";
-import { ArrowRight, Clock3, Layers3, Shield } from "lucide-react";
+import { ArrowLeft, ArrowRight, Clock3, Layers3, Shield } from "lucide-react";
 
 import {
   bootstrapStudySession,
@@ -207,6 +207,12 @@ function StudyPageContent({
   const [errorMessage, setErrorMessage] = useState("");
   const useSingleColumnLayout = usesSingleColumnLayout(studyId, pageNumber);
   const useImmersiveText = usesImmersiveTypography(studyId, pageNumber);
+  const previousPath =
+    studyId === "study1"
+      ? pageNumber === 1
+        ? buildStudyEntryPath(studyId, condition)
+        : buildStudyPagePath(studyId, condition, pageNumber - 1)
+      : null;
   const paragraphClassName = cn(
     "text-base leading-8 text-slate-700 md:text-lg",
     useImmersiveText && "md:text-[1.1rem] md:leading-9",
@@ -601,7 +607,23 @@ function StudyPageContent({
               </div>
             ) : null}
 
-            <div className={cn("mt-8 flex justify-end", useSingleColumnLayout && "md:mt-10")}>
+            <div
+              className={cn(
+                "mt-8 flex justify-end",
+                useSingleColumnLayout && "md:mt-10",
+                previousPath && "justify-between gap-4",
+              )}
+            >
+              {previousPath ? (
+                <Link
+                  href={previousPath}
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-300 hover:bg-slate-50"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  上一页
+                </Link>
+              ) : null}
+
               <button
                 type="button"
                 onClick={handleNext}

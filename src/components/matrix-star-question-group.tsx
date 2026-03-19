@@ -28,7 +28,7 @@ export function MatrixStarQuestionGroup({
 
       <section className="overflow-hidden rounded-[32px] border border-white/80 bg-white/88 shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
         <div className="hidden border-b border-slate-100 bg-slate-50/60 px-5 py-4 lg:block">
-          <div className="text-base font-semibold uppercase tracking-[0.18em] text-slate-500 md:text-[1.02rem]">
+          <div className="text-[1.05rem] font-semibold uppercase tracking-[0.16em] text-slate-500 md:text-[1.12rem]">
             题项
           </div>
         </div>
@@ -93,11 +93,11 @@ export function MatrixStarQuestionGroup({
       <div className="px-5 md:px-6">
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)] lg:gap-6">
           <div className="hidden lg:block" />
-          <div className="grid grid-cols-5 gap-2 text-[0.95rem] font-medium text-slate-500 md:text-base">
-            <span className="col-start-1 justify-self-center text-center leading-5">
+          <div className="grid grid-cols-5 gap-2 text-base font-medium text-slate-500 md:text-[1.05rem]">
+            <span className="col-start-1 w-max justify-self-center whitespace-nowrap text-center leading-5">
               非常不同意
             </span>
-            <span className="col-start-5 justify-self-center text-center leading-5">
+            <span className="col-start-5 w-max justify-self-center whitespace-nowrap text-center leading-5">
               非常同意
             </span>
           </div>
