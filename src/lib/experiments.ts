@@ -251,10 +251,10 @@ function buildStudy1Pages(condition: Condition): ResolvedStudyPage[] {
       ],
       scaleLabel: fivePointScaleLabel,
       items: [
-        "第二个 NFT collection 吸引了我的注意",
+        "浏览页面后，第二个 NFT collection 吸引了我的注意",
         "浏览页面后，我对第二个 NFT collection 更感兴趣",
-        "我想进一步了解第二个 NFT collection",
-        "第二个 NFT collection 给我留下了较深的印象",
+        "浏览页面后，我想进一步了解第二个 NFT collection",
+        "浏览页面后，第二个 NFT collection 给我留下了较深的印象",
       ],
       answerKeys: ["awareness_1", "awareness_2", "awareness_3", "awareness_4"],
       questionStyle: "matrix-stars",
