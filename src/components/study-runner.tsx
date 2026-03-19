@@ -381,6 +381,11 @@ function StudyPageContent({
                   label={page.collectionLabels[index]}
                   imageCount={page.cardImageCount}
                   metadataSize={page.metadataEmphasis ? "prominent" : "default"}
+                  creatorValueClassName={
+                    studyId === "study2" && pageNumber === 2 && index === 0
+                      ? "max-w-full overflow-hidden whitespace-nowrap [text-overflow:clip]"
+                      : undefined
+                  }
                   className="h-full"
                 />
               ))}

@@ -13,6 +13,7 @@ type CollectionCardProps = {
   layout?: "default" | "showcase";
   imageCount?: number;
   metadataSize?: "default" | "prominent";
+  creatorValueClassName?: string;
   className?: string;
 };
 
@@ -24,6 +25,7 @@ export function CollectionCard({
   layout = "default",
   imageCount,
   metadataSize = "default",
+  creatorValueClassName,
   className,
 }: CollectionCardProps) {
   const compact = density === "compact";
@@ -94,6 +96,7 @@ export function CollectionCard({
                 "mt-2 break-words font-semibold leading-6 text-pretty text-slate-900",
                 prominentMetadata ? "text-base leading-7 md:text-lg" : "text-sm",
                 showcase && "line-clamp-2 min-h-[3rem]",
+                creatorValueClassName,
               )}
             >
               {collection.creator}
