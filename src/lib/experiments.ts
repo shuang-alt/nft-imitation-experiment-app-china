@@ -401,7 +401,7 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
       introLines: [
         "以下问题是关于刚才浏览的第一个 NFT collection。",
         "请根据您的真实感受回答。",
-        "这里的第一个 NFT collection 指您刚才在上一页首先看到的 collection。",
+        "这里的第一个 NFT collection 指您刚才在上一页首先看到的左侧 collection。",
       ],
       scaleLabel: fivePointScaleLabel,
       items: [

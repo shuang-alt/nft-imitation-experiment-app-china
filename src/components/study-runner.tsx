@@ -207,6 +207,7 @@ function StudyPageContent({
   const [errorMessage, setErrorMessage] = useState("");
   const useSingleColumnLayout = usesSingleColumnLayout(studyId, pageNumber);
   const useImmersiveText = usesImmersiveTypography(studyId, pageNumber);
+  const useWideStudy2Showcase = studyId === "study2" && pageNumber === 2;
   const previousPath =
     pageNumber === 1
       ? buildStudyEntryPath(studyId, condition)
@@ -361,7 +362,12 @@ function StudyPageContent({
               </p>
             ))}
           </div>
-          <div className="mx-auto w-full max-w-[74rem]">
+          <div
+            className={cn(
+              "mx-auto w-full",
+              useWideStudy2Showcase ? "max-w-[76rem]" : "max-w-[74rem]",
+            )}
+          >
             <div
               className={cn(
                 "grid gap-5 xl:grid-cols-2",
@@ -596,7 +602,10 @@ function StudyPageContent({
           <section
             className={cn(
               "rounded-[36px] border border-white/80 bg-white/82 p-6 shadow-[0_28px_90px_rgba(15,23,42,0.1)] backdrop-blur-xl md:p-8",
-              useSingleColumnLayout && "mx-auto w-full max-w-5xl px-6 py-7 md:px-10 md:py-9",
+              useSingleColumnLayout &&
+                (useWideStudy2Showcase
+                  ? "mx-auto w-full max-w-7xl px-6 py-7 md:px-8 md:py-9 xl:px-10"
+                  : "mx-auto w-full max-w-5xl px-6 py-7 md:px-10 md:py-9"),
             )}
           >
             <div className="mb-8">
