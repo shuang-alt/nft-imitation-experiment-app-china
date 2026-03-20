@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:edgeone": "next build && node scripts/prepare-edgeone-output.mjs",
     "start": "next start",
     "lint": "eslint"
   },

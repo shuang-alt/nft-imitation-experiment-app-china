@@ -1,7 +1,18 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async rewrites() {
+    if (process.env.NODE_ENV !== "development") {
+      return [];
+    }
+
+    return [
+      {
+        source: "/api/:path*",
+        destination: "/dev-api/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
