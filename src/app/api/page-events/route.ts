@@ -1,9 +1,14 @@
 import { NextResponse } from "next/server";
 
+import { createMockApiBlockedResponse, isDevelopmentMockApiEnabled } from "@/lib/mock-api-guard";
 import { persistPageEvent } from "@/lib/storage";
 import type { PageEventPayload } from "@/lib/types";
 
 export async function POST(request: Request) {
+  if (!isDevelopmentMockApiEnabled()) {
+    return createMockApiBlockedResponse();
+  }
+
   const payload = (await request.json()) as Partial<PageEventPayload>;
 
   if (
@@ -36,5 +41,11 @@ export async function POST(request: Request) {
     duration_ms: payload.duration_ms,
   });
 
-  return NextResponse.json(result);
+  return NextResponse.json(result, {
+    headers: {
+      "Cache-Control": "no-store",
+      "x-backend-origin": "next-mock-api",
+      "x-storage-mode": "mock",
+    },
+  });
 }

@@ -1,4 +1,5 @@
 export type StorageMode = "mock" | "edgeone-kv";
+export type BackendOrigin = "next-mock-api" | "edge-functions" | "unknown";
 export type StudyId = "study1" | "study2";
 export type Condition = "control" | "treatment";
 export type CollectionKey =
@@ -127,6 +128,21 @@ export type StudyMetadata = {
   totalPages: number;
 };
 
+export type StoredPageSubmission = {
+  page_number: number;
+  page_version: string;
+  answers: AnswerRecord;
+  entered_at: string;
+  submitted_at: string;
+  duration_ms: number;
+};
+
+export type FirebaseBackupReceipt = {
+  key: string;
+  backedAt: string;
+  path: string;
+};
+
 export type RespondentSession = {
   respondentId: string;
   studyId: StudyId;
@@ -135,6 +151,8 @@ export type RespondentSession = {
   currentPage: number;
   completedAt?: string;
   pageDrafts: Record<string, AnswerRecord>;
+  pageSubmissions: Record<string, StoredPageSubmission>;
+  firebaseBackup?: FirebaseBackupReceipt;
 };
 
 export type StudySessionBootstrap = {
@@ -211,9 +229,40 @@ export type DashboardSummary = {
   updatedAt: string;
 };
 
+export type AdminHealthStatus = {
+  ok: boolean;
+  storageMode: StorageMode | "missing" | "unknown";
+  backendOrigin: BackendOrigin;
+  hasKvBinding: boolean;
+  kvBindingName: string;
+  respondentCount?: number;
+  submissionCount?: number;
+  notices: string[];
+  warnings: string[];
+  error?: string;
+};
+
 export type PersistResult = {
   mode: StorageMode;
   fallback?: boolean;
+};
+
+export type FinalSubmissionBackupPayload = {
+  backup_version: string;
+  respondent_id: string;
+  study_id: StudyId;
+  condition: Condition;
+  started_at: string;
+  finished_at: string;
+  status: "completed";
+  source: string;
+  pathname: string;
+  userAgent: string;
+  page_versions: Record<string, string>;
+  page_drafts: Record<string, AnswerRecord>;
+  page_submissions: StoredPageSubmission[];
+  current_page: StoredPageSubmission;
+  firebase_target_path: string;
 };
 
 export type ResearchAnswerRow = {

@@ -5,25 +5,52 @@ const KEY_PREFIXES = {
   submission: "submission_",
 };
 const STORAGE_MODE = "edgeone-kv";
+const BACKEND_ORIGIN = "edge-functions";
 const LIST_LIMIT = 256;
 const PLACEHOLDER_PREFIXES = ["__", "<", "[", "TODO", "YOUR_"];
 
-function jsonResponse(payload, init = {}) {
+function getKvBindingState(context) {
+  const kv = globalThis[KV_BINDING] ?? context.env?.[KV_BINDING];
+  const hasKvBinding =
+    !!kv && typeof kv.get === "function" && typeof kv.put === "function";
+
+  return {
+    kv: hasKvBinding ? kv : null,
+    hasKvBinding,
+  };
+}
+
+function buildBackendHeaders(hasKvBinding) {
+  return {
+    "x-storage-mode": hasKvBinding ? STORAGE_MODE : "missing",
+    "x-backend-origin": BACKEND_ORIGIN,
+    "x-kv-binding": hasKvBinding ? KV_BINDING : "missing",
+    "x-kv-binding-name": KV_BINDING,
+  };
+}
+
+function jsonResponse(payload, init = {}, options = {}) {
+  const hasKvBinding = options.hasKvBinding ?? true;
+
   return new Response(JSON.stringify(payload), {
     ...init,
     headers: {
       "content-type": "application/json; charset=utf-8",
       "cache-control": "no-store",
+      ...buildBackendHeaders(hasKvBinding),
       ...(init.headers ?? {}),
     },
   });
 }
 
-function textResponse(body, init = {}) {
+function textResponse(body, init = {}, options = {}) {
+  const hasKvBinding = options.hasKvBinding ?? true;
+
   return new Response(body, {
     ...init,
     headers: {
       "cache-control": "no-store",
+      ...buildBackendHeaders(hasKvBinding),
       ...(init.headers ?? {}),
     },
   });
@@ -50,16 +77,23 @@ function getEnvValue(context, key) {
   return typeof value === "string" ? value : "";
 }
 
-function getKvNamespace(context) {
-  const kv = globalThis[KV_BINDING] ?? context.env?.[KV_BINDING];
+function kvBindingMissingPayload() {
+  return {
+    ok: false,
+    error: `KV namespace binding ${KV_BINDING} is missing`,
+    storageMode: "missing",
+    backendOrigin: BACKEND_ORIGIN,
+    hasKvBinding: false,
+    kvBindingName: KV_BINDING,
+    notices: [],
+    warnings: [
+      `Formal backend is running in Edge Functions, but KV namespace binding ${KV_BINDING} is missing.`,
+    ],
+  };
+}
 
-  if (!kv || typeof kv.get !== "function" || typeof kv.put !== "function") {
-    throw new Error(
-      `KV binding "${KV_BINDING}" is unavailable. Bind the namespace in EdgeOne Pages first.`,
-    );
-  }
-
-  return kv;
+function kvBindingMissingResponse() {
+  return jsonResponse(kvBindingMissingPayload(), { status: 503 }, { hasKvBinding: false });
 }
 
 function padPageNumber(pageNumber) {
@@ -373,13 +407,32 @@ async function buildDataset(kv) {
     storageMode: STORAGE_MODE,
     notices: [
       `EdgeOne Pages KV mode is active via binding ${KV_BINDING}.`,
-      "All survey saves are persisted through edge-functions to the mainland deployment backend.",
+      "All survey saves and admin reads use the same edge-functions KV backend.",
     ],
     updatedAt: new Date().toISOString(),
   };
 }
 
+function buildHealthPayload(context, overrides = {}) {
+  const { hasKvBinding } = getKvBindingState(context);
+
+  return {
+    ok: overrides.ok ?? hasKvBinding,
+    storageMode: overrides.storageMode ?? (hasKvBinding ? STORAGE_MODE : "missing"),
+    backendOrigin: BACKEND_ORIGIN,
+    hasKvBinding,
+    kvBindingName: KV_BINDING,
+    respondentCount: overrides.respondentCount,
+    submissionCount: overrides.submissionCount,
+    notices: overrides.notices ?? [],
+    warnings: overrides.warnings ?? (hasKvBinding ? [] : kvBindingMissingPayload().warnings),
+    error: overrides.error,
+  };
+}
+
 async function persistRespondentStart(context, payload) {
+  const { kv, hasKvBinding } = getKvBindingState(context);
+
   if (
     !payload ||
     !payload.respondent_id ||
@@ -392,10 +445,14 @@ async function persistRespondentStart(context, payload) {
         error: "Missing or invalid respondent start fields.",
       },
       { status: 400 },
+      { hasKvBinding },
     );
   }
 
-  const kv = getKvNamespace(context);
+  if (!kv) {
+    return kvBindingMissingResponse();
+  }
+
   const key = respondentKey(
     payload.study_id,
     payload.condition,
@@ -414,12 +471,18 @@ async function persistRespondentStart(context, payload) {
 
   await kv.put(key, JSON.stringify(record));
 
-  return jsonResponse({
-    mode: STORAGE_MODE,
-  });
+  return jsonResponse(
+    {
+      mode: STORAGE_MODE,
+    },
+    {},
+    { hasKvBinding },
+  );
 }
 
 async function persistPageEvent(context, payload) {
+  const { kv, hasKvBinding } = getKvBindingState(context);
+
   if (
     !payload ||
     !payload.respondent_id ||
@@ -436,10 +499,14 @@ async function persistPageEvent(context, payload) {
         error: "Missing or invalid page event fields.",
       },
       { status: 400 },
+      { hasKvBinding },
     );
   }
 
-  const kv = getKvNamespace(context);
+  if (!kv) {
+    return kvBindingMissingResponse();
+  }
+
   const respondentStorageKey = respondentKey(
     payload.study_id,
     payload.condition,
@@ -482,12 +549,18 @@ async function persistPageEvent(context, payload) {
     kv.put(pageStorageKey, JSON.stringify(submissionRecord)),
   ]);
 
-  return jsonResponse({
-    mode: STORAGE_MODE,
-  });
+  return jsonResponse(
+    {
+      mode: STORAGE_MODE,
+    },
+    {},
+    { hasKvBinding },
+  );
 }
 
 async function persistRespondentFinish(context, payload) {
+  const { kv, hasKvBinding } = getKvBindingState(context);
+
   if (
     !payload ||
     !payload.respondent_id ||
@@ -500,10 +573,14 @@ async function persistRespondentFinish(context, payload) {
         error: "Missing or invalid respondent finish fields.",
       },
       { status: 400 },
+      { hasKvBinding },
     );
   }
 
-  const kv = getKvNamespace(context);
+  if (!kv) {
+    return kvBindingMissingResponse();
+  }
+
   const key = respondentKey(
     payload.study_id,
     payload.condition,
@@ -522,9 +599,13 @@ async function persistRespondentFinish(context, payload) {
 
   await kv.put(key, JSON.stringify(record));
 
-  return jsonResponse({
-    mode: STORAGE_MODE,
-  });
+  return jsonResponse(
+    {
+      mode: STORAGE_MODE,
+    },
+    {},
+    { hasKvBinding },
+  );
 }
 
 async function handleAdminDataset(context) {
@@ -534,11 +615,52 @@ async function handleAdminDataset(context) {
         error: "Unauthorized.",
       },
       { status: 401 },
+      { hasKvBinding: getKvBindingState(context).hasKvBinding },
     );
   }
 
-  const dataset = await buildDataset(getKvNamespace(context));
-  return jsonResponse(dataset);
+  const { kv, hasKvBinding } = getKvBindingState(context);
+
+  if (!kv) {
+    return kvBindingMissingResponse();
+  }
+
+  const dataset = await buildDataset(kv);
+  return jsonResponse(dataset, {}, { hasKvBinding });
+}
+
+async function handleAdminHealth(context) {
+  if (!(await isAdminAuthorized(context))) {
+    return jsonResponse(
+      {
+        error: "Unauthorized.",
+      },
+      { status: 401 },
+      { hasKvBinding: getKvBindingState(context).hasKvBinding },
+    );
+  }
+
+  const { kv, hasKvBinding } = getKvBindingState(context);
+
+  if (!kv) {
+    return jsonResponse(buildHealthPayload(context, kvBindingMissingPayload()), {
+      status: 503,
+    }, { hasKvBinding });
+  }
+
+  const dataset = await buildDataset(kv);
+
+  return jsonResponse(
+    buildHealthPayload(context, {
+      ok: true,
+      respondentCount: dataset.respondents.length,
+      submissionCount: dataset.pageEvents.length,
+      notices: dataset.notices,
+      warnings: [],
+    }),
+    {},
+    { hasKvBinding },
+  );
 }
 
 async function handleAdminJsonExport(context) {
@@ -548,10 +670,17 @@ async function handleAdminJsonExport(context) {
         error: "Unauthorized.",
       },
       { status: 401 },
+      { hasKvBinding: getKvBindingState(context).hasKvBinding },
     );
   }
 
-  const dataset = await buildDataset(getKvNamespace(context));
+  const { kv, hasKvBinding } = getKvBindingState(context);
+
+  if (!kv) {
+    return kvBindingMissingResponse();
+  }
+
+  const dataset = await buildDataset(kv);
   const payload = {
     generated_at: new Date().toISOString(),
     storage_mode: STORAGE_MODE,
@@ -569,11 +698,15 @@ async function handleAdminJsonExport(context) {
   };
   const timestamp = new Date().toISOString().replaceAll(":", "-");
 
-  return jsonResponse(payload, {
-    headers: {
-      "content-disposition": `attachment; filename="nft-imitation-export-${timestamp}.json"`,
+  return jsonResponse(
+    payload,
+    {
+      headers: {
+        "content-disposition": `attachment; filename="nft-imitation-export-${timestamp}.json"`,
+      },
     },
-  });
+    { hasKvBinding },
+  );
 }
 
 async function handleAdminCsvExport(context) {
@@ -583,19 +716,30 @@ async function handleAdminCsvExport(context) {
         error: "Unauthorized.",
       },
       { status: 401 },
+      { hasKvBinding: getKvBindingState(context).hasKvBinding },
     );
   }
 
-  const dataset = await buildDataset(getKvNamespace(context));
+  const { kv, hasKvBinding } = getKvBindingState(context);
+
+  if (!kv) {
+    return kvBindingMissingResponse();
+  }
+
+  const dataset = await buildDataset(kv);
   const csv = buildResearchCsv(dataset);
   const timestamp = new Date().toISOString().replaceAll(":", "-");
 
-  return textResponse(csv, {
-    headers: {
-      "content-type": "text/csv; charset=utf-8",
-      "content-disposition": `attachment; filename="nft-imitation-answer-rows-${timestamp}.csv"`,
+  return textResponse(
+    csv,
+    {
+      headers: {
+        "content-type": "text/csv; charset=utf-8",
+        "content-disposition": `attachment; filename="nft-imitation-answer-rows-${timestamp}.csv"`,
+      },
     },
-  });
+    { hasKvBinding },
+  );
 }
 
 export async function onRequest(context) {
@@ -619,6 +763,10 @@ export async function onRequest(context) {
       return handleAdminDataset(context);
     }
 
+    if (pathname === "/api/admin/health" && context.request.method === "GET") {
+      return handleAdminHealth(context);
+    }
+
     if (pathname === "/api/admin/export/json" && context.request.method === "GET") {
       return handleAdminJsonExport(context);
     }
@@ -629,21 +777,20 @@ export async function onRequest(context) {
 
     return jsonResponse(
       {
-        error: "Not Found.",
+        error: `No API route matched ${pathname}.`,
       },
       { status: 404 },
+      { hasKvBinding: getKvBindingState(context).hasKvBinding },
     );
   } catch (error) {
-    console.error("[edge-functions] request failed", error);
+    console.error(error);
 
     return jsonResponse(
       {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Unexpected EdgeOne Pages function error.",
+        error: error instanceof Error ? error.message : "Unknown edge-functions error.",
       },
       { status: 500 },
+      { hasKvBinding: getKvBindingState(context).hasKvBinding },
     );
   }
 }

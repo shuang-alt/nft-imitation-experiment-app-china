@@ -3,10 +3,12 @@ import type {
   AnswerRecord,
   Condition,
   DashboardDataset,
+  FirebaseBackupReceipt,
   PageEventPayload,
   RespondentFinishPayload,
   RespondentSession,
   RespondentStartPayload,
+  StoredPageSubmission,
   StudySessionBootstrap,
   StudyId,
 } from "./types";
@@ -103,6 +105,8 @@ function ensureDrafts(
     currentPage: value.currentPage ?? 1,
     completedAt: value.completedAt,
     pageDrafts: value.pageDrafts ?? {},
+    pageSubmissions: value.pageSubmissions ?? {},
+    firebaseBackup: value.firebaseBackup,
   } satisfies RespondentSession;
 }
 
@@ -134,6 +138,7 @@ export function getOrCreateStudySession(studyId: StudyId, condition: Condition) 
     startedAt: new Date().toISOString(),
     currentPage: 1,
     pageDrafts: {},
+    pageSubmissions: {},
   };
 
   writeJson(scopedSessionStorageKey(studyId, condition), session);
@@ -174,6 +179,7 @@ export function bootstrapStudySession(
     currentPage: seed.currentPage ?? 1,
     completedAt: undefined,
     pageDrafts: {},
+    pageSubmissions: {},
   };
 
   writeJson(scopedSessionStorageKey(studyId, condition), session);
@@ -282,6 +288,47 @@ export function markStudyCompleted(
     ...session,
     currentPage: pageNumber,
     completedAt: finishedAt,
+  } satisfies RespondentSession);
+}
+
+export function saveStudyPageSubmission(
+  studyId: StudyId,
+  condition: Condition,
+  submission: StoredPageSubmission,
+) {
+  const session = readStudySession(studyId, condition);
+
+  if (!session) {
+    return;
+  }
+
+  writeJson(scopedSessionStorageKey(studyId, condition), {
+    ...session,
+    pageDrafts: {
+      ...session.pageDrafts,
+      [`page-${submission.page_number}`]: submission.answers,
+    },
+    pageSubmissions: {
+      ...session.pageSubmissions,
+      [`page-${submission.page_number}`]: submission,
+    },
+  } satisfies RespondentSession);
+}
+
+export function saveFirebaseBackupReceipt(
+  studyId: StudyId,
+  condition: Condition,
+  receipt: FirebaseBackupReceipt,
+) {
+  const session = readStudySession(studyId, condition);
+
+  if (!session) {
+    return;
+  }
+
+  writeJson(scopedSessionStorageKey(studyId, condition), {
+    ...session,
+    firebaseBackup: receipt,
   } satisfies RespondentSession);
 }
 

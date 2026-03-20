@@ -66,7 +66,19 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     );
   }
 
-  const dataset = await getDashboardDataset();
+  const dataset =
+    process.env.NODE_ENV === "development"
+      ? await getDashboardDataset()
+      : {
+          respondents: [],
+          pageEvents: [],
+          finishes: [],
+          storageMode: "mock" as const,
+          notices: [
+            "Waiting for /api/admin/dataset and /api/admin/health from the formal backend.",
+          ],
+          updatedAt: new Date().toISOString(),
+        };
 
   return (
     <main className="min-h-screen px-4 py-6 md:px-6 md:py-8">

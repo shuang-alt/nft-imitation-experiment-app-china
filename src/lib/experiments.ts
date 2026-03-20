@@ -54,14 +54,14 @@ export const studyMetadata: Record<StudyId, StudyMetadata> = {
     slug: "study-1",
     shortLabel: "Study 1",
     fullTitle: "Sequential Exposure Experiment",
-    totalPages: 8,
+    totalPages: 9,
   },
   study2: {
     id: "study2",
     slug: "study-2",
     shortLabel: "Study 2",
     fullTitle: "Joint Display Experiment",
-    totalPages: 7,
+    totalPages: 8,
   },
 };
 
@@ -182,11 +182,11 @@ function buildStudy1Pages(condition: Condition): ResolvedStudyPage[] {
     {
       kind: "single-collection",
       pageNumber: 2,
-      pageVersion: "study1-page2-v2",
+      pageVersion: "study1-page2-v3",
       introLines: [
         "请想象你正在浏览一个 NFT marketplace。",
         "下面展示的是平台上的一个 NFT collection。",
-        "请认真查看本页展示的信息，后续问题将涉及您刚才浏览页面中的具体内容，请根据页面信息作答。",
+        "请认真查看本页展示的信息，后续问题将涉及本页中的具体内容，请根据页面信息作答。",
       ],
       collectionKey: condition === "control" ? "goopTroop" : "basedOnChainDinos",
       cardImageCount: 3,
@@ -201,10 +201,10 @@ function buildStudy1Pages(condition: Condition): ResolvedStudyPage[] {
     {
       kind: "single-collection",
       pageNumber: 3,
-      pageVersion: "study1-page3-v2",
+      pageVersion: "study1-page3-v3",
       introLines: [
         "现在请继续浏览下面这个 NFT collection。",
-        "请继续认真查看本页展示的信息，接下来的问题将涉及您刚才浏览过的两个 NFT collection，请根据页面信息作答。",
+        "请继续认真查看本页展示的信息，接下来的问题将涉及这两个 NFT collection，请根据页面信息作答。",
       ],
       collectionKey: "tinyDinosEth",
       cardImageCount: 3,
@@ -220,6 +220,24 @@ function buildStudy1Pages(condition: Condition): ResolvedStudyPage[] {
       kind: "single-choice",
       pageNumber: 4,
       pageVersion: "study1-page4-v1",
+      introLines: ["请根据刚才看到的页面信息回答以下问题。"],
+      question: "这两个 NFT collection 中，哪一个创建时间更早？",
+      answerKey: "earlier_creation_judgment_1",
+      options: [
+        {
+          value: "first_created_earlier",
+          label: "第一个 NFT collection 更早创建",
+        },
+        {
+          value: "second_created_earlier",
+          label: "第二个 NFT collection 更早创建",
+        },
+      ],
+    },
+    {
+      kind: "single-choice",
+      pageNumber: 5,
+      pageVersion: "study1-page5-v2",
       introLines: [
         "以下问题是关于刚才浏览的两个 NFT collection 的关系判断。",
         "请根据您刚才看到的页面信息，选择最符合您判断的一项。",
@@ -243,8 +261,8 @@ function buildStudy1Pages(condition: Condition): ResolvedStudyPage[] {
     },
     {
       kind: "likert",
-      pageNumber: 5,
-      pageVersion: "study1-page5-v2",
+      pageNumber: 6,
+      pageVersion: "study1-page6-v3",
       introLines: [
         "以下问题是关于刚才浏览的第二个 NFT collection。",
         "请根据您的真实感受回答。",
@@ -261,8 +279,8 @@ function buildStudy1Pages(condition: Condition): ResolvedStudyPage[] {
     },
     {
       kind: "likert",
-      pageNumber: 6,
-      pageVersion: "study1-page6-v2",
+      pageNumber: 7,
+      pageVersion: "study1-page7-v3",
       introLines: ["以下问题仍然关于刚才浏览的第二个 NFT collection。"],
       scaleLabel: fivePointScaleLabel,
       items: [
@@ -281,8 +299,8 @@ function buildStudy1Pages(condition: Condition): ResolvedStudyPage[] {
     },
     {
       kind: "likert",
-      pageNumber: 7,
-      pageVersion: "study1-page7-v2",
+      pageNumber: 8,
+      pageVersion: "study1-page8-v3",
       introLines: [
         "以下问题是关于刚才浏览的第一个 NFT collection 与第二个 NFT collection 之间的关系。",
       ],
@@ -303,8 +321,8 @@ function buildStudy1Pages(condition: Condition): ResolvedStudyPage[] {
     },
     {
       kind: "demographics",
-      pageNumber: 8,
-      pageVersion: "study1-page8-v2",
+      pageNumber: 9,
+      pageVersion: "study1-page9-v1",
       introLines: ["以下问题用于了解您的 NFT 使用经验。"],
       scaleLabel: fivePointScaleLabel,
       items: nftExperienceItems,
@@ -345,11 +363,11 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
     {
       kind: "dual-collection",
       pageNumber: 2,
-      pageVersion: "study2-page2-v2",
+      pageVersion: "study2-page2-v3",
       introLines: [
         "请想象你正在浏览一个 NFT marketplace。",
         "以下是平台上展示的两个 NFT collection。",
-        "请认真查看本页展示的信息，后续问题将涉及您刚才浏览页面中的具体内容，请根据页面信息作答。",
+        "请认真查看本页展示的信息，后续问题将涉及本页中的具体内容，请根据页面信息作答。",
       ],
       collectionKeys: [
         "tinyDinosEth",
@@ -371,7 +389,25 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
     {
       kind: "single-choice",
       pageNumber: 3,
-      pageVersion: "study2-page3-v2",
+      pageVersion: "study2-page3-v1",
+      introLines: ["请根据刚才看到的页面信息回答以下问题。"],
+      question: "这两个 NFT collection 中，哪一个创建时间更早？",
+      answerKey: "earlier_creation_judgment_2",
+      options: [
+        {
+          value: "first_created_earlier",
+          label: "第一个 NFT collection 更早创建",
+        },
+        {
+          value: "second_created_earlier",
+          label: "第二个 NFT collection 更早创建",
+        },
+      ],
+    },
+    {
+      kind: "single-choice",
+      pageNumber: 4,
+      pageVersion: "study2-page4-v3",
       introLines: [
         "以下问题是关于刚才浏览的两个 NFT collection 的关系判断。",
         "请根据您刚才看到的页面信息，选择最符合您判断的一项。",
@@ -396,8 +432,8 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
     },
     {
       kind: "likert",
-      pageNumber: 4,
-      pageVersion: "study2-page4-v2",
+      pageNumber: 5,
+      pageVersion: "study2-page5-v3",
       introLines: [
         "以下问题是关于刚才浏览的第一个 NFT collection。",
         "请根据您的真实感受回答。",
@@ -421,8 +457,8 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
     },
     {
       kind: "likert",
-      pageNumber: 5,
-      pageVersion: "study2-page5-v2",
+      pageNumber: 6,
+      pageVersion: "study2-page6-v3",
       introLines: [
         "以下问题仍然关于刚才浏览的第一个 NFT collection。",
         "这里的第一个 NFT collection 指您刚才首先看到的 collection。",
@@ -450,8 +486,8 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
     },
     {
       kind: "likert",
-      pageNumber: 6,
-      pageVersion: "study2-page6-v2",
+      pageNumber: 7,
+      pageVersion: "study2-page7-v3",
       introLines: [
         "以下问题是关于刚才浏览的第一个 NFT collection 与第二个 NFT collection 之间的关系。",
         "其中，第一个 NFT collection 指您先看到的 collection，第二个 NFT collection 指随后看到的 collection。",
@@ -479,8 +515,8 @@ function buildStudy2Pages(condition: Condition): ResolvedStudyPage[] {
     },
     {
       kind: "demographics",
-      pageNumber: 7,
-      pageVersion: "study2-page7-v2",
+      pageNumber: 8,
+      pageVersion: "study2-page8-v1",
       introLines: ["以下问题用于了解您的 NFT 使用经验。"],
       scaleLabel: fivePointScaleLabel,
       items: nftExperienceItems,

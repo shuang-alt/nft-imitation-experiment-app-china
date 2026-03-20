@@ -2,9 +2,14 @@ import { NextResponse } from "next/server";
 
 import { isAdminRequestAuthorized } from "@/lib/admin-auth";
 import { buildResearchCsv } from "@/lib/export";
+import { createMockApiBlockedResponse, isDevelopmentMockApiEnabled } from "@/lib/mock-api-guard";
 import { getDashboardDataset } from "@/lib/storage";
 
 export async function GET(request: Request) {
+  if (!isDevelopmentMockApiEnabled()) {
+    return createMockApiBlockedResponse();
+  }
+
   if (!(await isAdminRequestAuthorized(request))) {
     return NextResponse.json(
       {
@@ -23,6 +28,8 @@ export async function GET(request: Request) {
       "Cache-Control": "no-store",
       "Content-Type": "text/csv; charset=utf-8",
       "Content-Disposition": `attachment; filename="nft-imitation-answer-rows-${timestamp}.csv"`,
+      "x-backend-origin": "next-mock-api",
+      "x-storage-mode": "mock",
     },
   });
 }

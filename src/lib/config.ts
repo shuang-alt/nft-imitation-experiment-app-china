@@ -7,6 +7,7 @@ export const env = {
   adminDashboardPassword: process.env.ADMIN_DASHBOARD_PASSWORD ?? "",
   adminSessionSecret: process.env.ADMIN_SESSION_SECRET ?? "",
   customDomain: process.env.CUSTOM_DOMAIN ?? "",
+  firebaseDatabaseUrl: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ?? "",
 };
 
 export const requiredEnvironmentKeys = [
@@ -14,6 +15,7 @@ export const requiredEnvironmentKeys = [
   "ADMIN_DASHBOARD_PASSWORD",
   "ADMIN_SESSION_SECRET",
   "CUSTOM_DOMAIN",
+  "NEXT_PUBLIC_FIREBASE_DATABASE_URL",
 ] as const;
 
 export function isConfiguredValue(value: string | undefined) {
@@ -38,6 +40,10 @@ export function isAdminPasswordEnabled() {
 
 export function isAdminSessionSecretEnabled() {
   return isConfiguredValue(env.adminSessionSecret);
+}
+
+export function isFirebaseDatabaseEnabled() {
+  return isConfiguredValue(env.firebaseDatabaseUrl);
 }
 
 export function getStorageMode(): StorageMode {

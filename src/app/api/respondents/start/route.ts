@@ -1,9 +1,14 @@
 import { NextResponse } from "next/server";
 
+import { createMockApiBlockedResponse, isDevelopmentMockApiEnabled } from "@/lib/mock-api-guard";
 import { persistRespondentStart } from "@/lib/storage";
 import type { RespondentStartPayload } from "@/lib/types";
 
 export async function POST(request: Request) {
+  if (!isDevelopmentMockApiEnabled()) {
+    return createMockApiBlockedResponse();
+  }
+
   const payload = (await request.json()) as Partial<RespondentStartPayload>;
 
   if (
@@ -28,5 +33,11 @@ export async function POST(request: Request) {
     status: "in_progress",
   });
 
-  return NextResponse.json(result);
+  return NextResponse.json(result, {
+    headers: {
+      "Cache-Control": "no-store",
+      "x-backend-origin": "next-mock-api",
+      "x-storage-mode": "mock",
+    },
+  });
 }

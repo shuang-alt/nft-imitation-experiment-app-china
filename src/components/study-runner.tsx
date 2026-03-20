@@ -15,6 +15,8 @@ import {
   markStudyCompleted,
   readStudySession,
   saveStudyDraft,
+  saveFirebaseBackupReceipt,
+  saveStudyPageSubmission,
   subscribeToStorage,
   updateStudyCurrentPage,
 } from "@/lib/client-storage";
@@ -26,12 +28,15 @@ import {
   getStudyMetadata,
   getStudyPages,
 } from "@/lib/experiments";
+import { backupCompletedSubmissionToFirebase } from "@/lib/firebase-backup";
 import type {
   AnswerRecord,
   Condition,
   DemographicsPage,
+  FinalSubmissionBackupPayload,
   PersistResult,
   ResolvedStudyPage,
+  StoredPageSubmission,
   StudySessionBootstrap,
   StudyId,
 } from "@/lib/types";
@@ -50,7 +55,7 @@ type StudyRunnerProps = {
 };
 
 function usesSingleColumnLayout(studyId: StudyId, pageNumber: number) {
-  return studyId === "study1" || (studyId === "study2" && pageNumber >= 1 && pageNumber <= 3);
+  return studyId === "study1" || (studyId === "study2" && pageNumber >= 1 && pageNumber <= 4);
 }
 
 function usesImmersiveTypography(studyId: StudyId, pageNumber: number) {
@@ -113,6 +118,62 @@ async function postPayload<T>(path: string, payload: unknown): Promise<T> {
   }
 
   return (await response.json()) as T;
+}
+
+function createStoredPageSubmission(payload: {
+  page_number: number;
+  page_version: string;
+  answers: AnswerRecord;
+  entered_at: string;
+  submitted_at: string;
+  duration_ms: number;
+}): StoredPageSubmission {
+  return {
+    page_number: payload.page_number,
+    page_version: payload.page_version,
+    answers: payload.answers,
+    entered_at: payload.entered_at,
+    submitted_at: payload.submitted_at,
+    duration_ms: payload.duration_ms,
+  };
+}
+
+function buildFinalSubmissionBackupPayload(params: {
+  studyId: StudyId;
+  condition: Condition;
+  finishedAt: string;
+  session: NonNullable<ReturnType<typeof readStudySession>>;
+  currentPageSubmission: StoredPageSubmission;
+}): FinalSubmissionBackupPayload {
+  const pages = getStudyPages(params.studyId, params.condition);
+  const pageVersions = Object.fromEntries(
+    pages.map((studyPage) => [String(studyPage.pageNumber), studyPage.pageVersion]),
+  );
+  const pageSubmissions = Object.values(params.session.pageSubmissions).sort(
+    (left, right) => left.page_number - right.page_number,
+  );
+
+  return {
+    backup_version: "firebase-final-v1",
+    respondent_id: params.session.respondentId,
+    study_id: params.studyId,
+    condition: params.condition,
+    started_at: params.session.startedAt,
+    finished_at: params.finishedAt,
+    status: "completed",
+    source: window.location.href,
+    pathname: window.location.pathname,
+    userAgent: window.navigator.userAgent,
+    page_versions: pageVersions,
+    page_drafts: {
+      ...params.session.pageDrafts,
+      [`page-${params.currentPageSubmission.page_number}`]:
+        params.currentPageSubmission.answers,
+    },
+    page_submissions: pageSubmissions,
+    current_page: params.currentPageSubmission,
+    firebase_target_path: "/survey_submissions.json",
+  };
 }
 
 export function StudyRunner({
@@ -256,6 +317,7 @@ function StudyPageContent({
     try {
       const saveResult = await postPayload<PersistResult>("/api/page-events", payload);
       cachePageEvent(payload);
+      saveStudyPageSubmission(studyId, condition, createStoredPageSubmission(payload));
 
       if (saveResult.mode === "mock") {
         console.info("[client-mock] page-event", payload);
@@ -274,16 +336,46 @@ function StudyPageContent({
           finishPayload,
         );
 
-        cacheFinish(finishPayload);
-        markStudyCompleted(studyId, condition, submittedAt, page.pageNumber);
-
         if (finishResult.mode === "mock") {
           console.info("[client-mock] respondent-finish", finishPayload);
         }
 
-        startTransition(() => {
-          router.push(buildThankYouPath(studyId, condition));
+        const latestSession = readStudySession(studyId, condition);
+
+        if (!latestSession) {
+          setErrorMessage("本地会话丢失，请返回首页重新开始。");
+          return;
+        }
+
+        const currentPageSubmission = createStoredPageSubmission(payload);
+        const finalBackupPayload = buildFinalSubmissionBackupPayload({
+          studyId,
+          condition,
+          finishedAt: submittedAt,
+          session: latestSession,
+          currentPageSubmission,
         });
+
+        try {
+          const firebaseBackup = await backupCompletedSubmissionToFirebase(
+            finalBackupPayload,
+          );
+
+          saveFirebaseBackupReceipt(studyId, condition, {
+            key: firebaseBackup.key,
+            backedAt: submittedAt,
+            path: firebaseBackup.path,
+          });
+          cacheFinish(finishPayload);
+          markStudyCompleted(studyId, condition, submittedAt, page.pageNumber);
+
+          startTransition(() => {
+            router.push(buildThankYouPath(studyId, condition));
+          });
+        } catch (backupError) {
+          console.error("Failed to backup final submission to Firebase", backupError);
+          setErrorMessage("最终提交失败，请重试。数据尚未完成备份。");
+        }
 
         return;
       }
