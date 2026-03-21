@@ -229,7 +229,9 @@ export function StudyRunner({
     return (
       <div className="mx-auto flex min-h-screen max-w-4xl items-center justify-center px-4 py-16">
         <div className="rounded-[32px] border border-white/80 bg-white/85 px-8 py-10 text-center shadow-[0_30px_80px_rgba(15,23,42,0.12)]">
-          <p className="text-sm font-medium text-slate-500">Preparing study session...</p>
+          <p className="text-sm font-medium text-slate-500">
+            Preparing study session（正在准备问卷）...
+          </p>
         </div>
       </div>
     );
@@ -450,6 +452,7 @@ function StudyPageContent({
               nameOverride={page.collectionNameOverride}
               imageCount={page.cardImageCount}
               metadataSize={page.metadataEmphasis ? "prominent" : "default"}
+              showBilingualTerms
             />
           </div>
           <div className="space-y-2">
@@ -498,6 +501,7 @@ function StudyPageContent({
                   label={page.collectionLabels[index]}
                   imageCount={page.cardImageCount}
                   metadataSize={page.metadataEmphasis ? "prominent" : "default"}
+                  showBilingualTerms
                   creatorValueClassName={
                     studyId === "study2" && pageNumber === 2 && index === 0
                       ? "max-w-full overflow-hidden whitespace-nowrap [text-overflow:clip]"
@@ -732,7 +736,7 @@ function StudyPageContent({
               {page.showStudySnapshot !== false ? (
                 <section className="rounded-[32px] border border-white/80 bg-white/82 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.08)] backdrop-blur-xl">
                   <div className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
-                    Study Snapshot
+                    Study Snapshot（问卷快照）
                   </div>
                   <h2 className="mt-3 font-display text-2xl text-slate-950">
                     {study.fullTitle}
@@ -740,7 +744,7 @@ function StudyPageContent({
                   <dl className="mt-5 grid gap-3 sm:grid-cols-2">
                     <div className="rounded-[22px] border border-slate-100 bg-slate-50/80 p-4">
                       <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                        Respondent
+                        Respondent（受试者）
                       </dt>
                       <dd className="mt-2 text-sm font-semibold text-slate-900">
                         {abbreviateRespondentId(session.respondentId)}
@@ -748,7 +752,7 @@ function StudyPageContent({
                     </div>
                     <div className="rounded-[22px] border border-slate-100 bg-slate-50/80 p-4">
                       <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                        Page
+                        Page（页码）
                       </dt>
                       <dd className="mt-2 text-sm font-semibold text-slate-900">
                         {pageNumber} / {study.totalPages}
@@ -756,7 +760,7 @@ function StudyPageContent({
                     </div>
                     <div className="rounded-[22px] border border-slate-100 bg-slate-50/80 p-4">
                       <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                        Progress
+                        Progress（进度）
                       </dt>
                       <dd className="mt-2 text-sm font-semibold text-slate-900">
                         {progressPercent}%
@@ -764,10 +768,10 @@ function StudyPageContent({
                     </div>
                     <div className="rounded-[22px] border border-slate-100 bg-slate-50/80 p-4">
                       <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                        Privacy
+                        Privacy（隐私）
                       </dt>
                       <dd className="mt-2 text-sm font-semibold text-slate-900">
-                        Anonymous
+                        Anonymous（匿名）
                       </dd>
                     </div>
                   </dl>
@@ -780,6 +784,7 @@ function StudyPageContent({
                   collection={getCollectionRecord(collectionKey)}
                   density="compact"
                   imageCount={page.sidebarImageCount}
+                  showBilingualTerms
                 />
               ))}
             </aside>
