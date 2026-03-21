@@ -639,26 +639,7 @@ function StudyPageContent({
 
   return (
     <main className="min-h-screen px-4 py-6 md:px-6 md:py-8">
-      <div className="mx-auto max-w-7xl space-y-6">
-        <header className="rounded-[36px] border border-white/80 bg-white/80 px-6 py-5 shadow-[0_28px_90px_rgba(15,23,42,0.1)] backdrop-blur-xl">
-          <div className="space-y-2">
-            <Link
-              href={buildStudyEntryPath(studyId, condition)}
-              className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500"
-            >
-              VaultCanvas Lab
-            </Link>
-            <div>
-              <h1 className="font-display text-3xl text-slate-950 md:text-[2.5rem]">
-                {study.fullTitle}
-              </h1>
-              <p className="mt-1 text-sm text-slate-500">
-                {study.shortLabel} · Page {pageNumber} / {study.totalPages}
-              </p>
-            </div>
-          </div>
-        </header>
-
+      <div className="mx-auto max-w-7xl">
         <div
           className={cn(
             "grid gap-6",
