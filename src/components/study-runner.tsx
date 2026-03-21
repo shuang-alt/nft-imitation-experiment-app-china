@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore, useTransition } from "react";
-import { ArrowLeft, ArrowRight, Clock3, Layers3, Shield } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import {
   bootstrapStudySession,
@@ -640,7 +640,7 @@ function StudyPageContent({
   return (
     <main className="min-h-screen px-4 py-6 md:px-6 md:py-8">
       <div className="mx-auto max-w-7xl space-y-6">
-        <header className="flex flex-col gap-4 rounded-[36px] border border-white/80 bg-white/80 px-6 py-5 shadow-[0_28px_90px_rgba(15,23,42,0.1)] backdrop-blur-xl lg:flex-row lg:items-center lg:justify-between">
+        <header className="rounded-[36px] border border-white/80 bg-white/80 px-6 py-5 shadow-[0_28px_90px_rgba(15,23,42,0.1)] backdrop-blur-xl">
           <div className="space-y-2">
             <Link
               href={buildStudyEntryPath(studyId, condition)}
@@ -654,36 +654,6 @@ function StudyPageContent({
               </h1>
               <p className="mt-1 text-sm text-slate-500">
                 {study.shortLabel} · Page {pageNumber} / {study.totalPages}
-              </p>
-            </div>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-3">
-            <div className="rounded-[24px] border border-slate-100 bg-slate-50/80 px-4 py-3">
-              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
-                <Clock3 className="h-4 w-4" />
-                Session
-              </div>
-              <p className="mt-2 text-sm font-semibold text-slate-900">
-                {abbreviateRespondentId(session.respondentId)}
-              </p>
-            </div>
-            <div className="rounded-[24px] border border-slate-100 bg-slate-50/80 px-4 py-3">
-              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
-                <Layers3 className="h-4 w-4" />
-                Progress
-              </div>
-              <p className="mt-2 text-sm font-semibold text-slate-900">
-                {progressPercent}% complete
-              </p>
-            </div>
-            <div className="rounded-[24px] border border-slate-100 bg-slate-50/80 px-4 py-3">
-              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
-                <Shield className="h-4 w-4" />
-                Privacy
-              </div>
-              <p className="mt-2 text-sm font-semibold text-slate-900">
-                Anonymous response
               </p>
             </div>
           </div>
