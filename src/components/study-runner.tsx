@@ -28,7 +28,11 @@ import {
   getStudyMetadata,
   getStudyPages,
 } from "@/lib/experiments";
-import { backupCompletedSubmissionToFirebase } from "@/lib/firebase-backup";
+import {
+  FIREBASE_PAGE_EVENTS_PATH,
+  backupCompletedSubmissionToFirebase,
+  backupPageEventToFirebase,
+} from "@/lib/firebase-backup";
 import type {
   AnswerRecord,
   Condition,
@@ -318,6 +322,27 @@ function StudyPageContent({
       const saveResult = await postPayload<PersistResult>("/api/page-events", payload);
       cachePageEvent(payload);
       saveStudyPageSubmission(studyId, condition, createStoredPageSubmission(payload));
+
+      try {
+        await backupPageEventToFirebase({
+          backup_version: "firebase-page-event-v1",
+          respondent_id: payload.respondent_id,
+          study_id: payload.study_id,
+          condition: payload.condition,
+          page_number: payload.page_number,
+          page_version: payload.page_version,
+          answers: payload.answers,
+          entered_at: payload.entered_at,
+          submitted_at: payload.submitted_at,
+          duration_ms: payload.duration_ms,
+          source: window.location.href,
+          pathname: window.location.pathname,
+          userAgent: window.navigator.userAgent,
+          firebase_target_path: FIREBASE_PAGE_EVENTS_PATH,
+        });
+      } catch (backupError) {
+        console.error("Failed to backup page-event to Firebase", backupError);
+      }
 
       if (saveResult.mode === "mock") {
         console.info("[client-mock] page-event", payload);
