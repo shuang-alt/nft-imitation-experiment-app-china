@@ -11,6 +11,8 @@ type CollectionCardProps = {
   nameOverride?: string;
   density?: "default" | "compact";
   layout?: "default" | "showcase";
+  labelVariant?: "pill" | "plain";
+  showMarketplaceBadge?: boolean;
   imageCount?: number;
   metadataSize?: "default" | "prominent";
   creatorValueClassName?: string;
@@ -24,6 +26,8 @@ export function CollectionCard({
   nameOverride,
   density = "default",
   layout = "default",
+  labelVariant = "pill",
+  showMarketplaceBadge = true,
   imageCount,
   metadataSize = "default",
   creatorValueClassName,
@@ -77,8 +81,10 @@ export function CollectionCard({
             {label ? (
               <span
                 className={cn(
-                  "inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold tracking-[0.12em] leading-5 text-slate-500",
-                  showcase && "max-w-full whitespace-normal break-keep text-left",
+                  labelVariant === "plain"
+                    ? "block max-w-full whitespace-normal break-keep text-left text-sm font-semibold leading-6 text-slate-500"
+                    : "inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold tracking-[0.12em] leading-5 text-slate-500",
+                  showcase && labelVariant === "pill" && "max-w-full whitespace-normal break-keep text-left",
                 )}
               >
                 {label}
@@ -97,15 +103,17 @@ export function CollectionCard({
               </h3>
             </div>
           </div>
-          <span
-            className={cn(
-              "inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[11px] font-semibold leading-4 text-emerald-700",
-              showcase && "max-w-full self-start whitespace-normal break-keep text-left",
-            )}
-          >
-            <Sparkles className="h-3.5 w-3.5" />
-            {marketplacePreviewLabel}
-          </span>
+          {showMarketplaceBadge ? (
+            <span
+              className={cn(
+                "inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[11px] font-semibold leading-4 text-emerald-700",
+                showcase && "max-w-full self-start whitespace-normal break-keep text-left",
+              )}
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              {marketplacePreviewLabel}
+            </span>
+          ) : null}
         </div>
 
         <CollectionArt

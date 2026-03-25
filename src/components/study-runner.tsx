@@ -473,6 +473,8 @@ function StudyPageContent({
     }
 
     if (page.kind === "dual-collection") {
+      const useStudy2Page2HeaderFix = studyId === "study2" && pageNumber === 2;
+
       return (
         <div className={cn("space-y-6", useSingleColumnLayout && "space-y-7")}>
           <div className="space-y-3">
@@ -499,6 +501,8 @@ function StudyPageContent({
                   key={`${collectionKey}-${index}`}
                   collection={getCollectionRecord(collectionKey)}
                   label={page.collectionLabels[index]}
+                  labelVariant={useStudy2Page2HeaderFix ? "plain" : "pill"}
+                  showMarketplaceBadge={!useStudy2Page2HeaderFix}
                   imageCount={page.cardImageCount}
                   metadataSize={page.metadataEmphasis ? "prominent" : "default"}
                   showBilingualTerms
