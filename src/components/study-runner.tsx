@@ -432,6 +432,8 @@ function StudyPageContent({
     if (page.kind === "single-collection") {
       const collection = getCollectionRecord(page.collectionKey);
       const useBrowsePresentation = page.cardPresentation === "study1-browse";
+      const useStudy1BrowseHeaderFix =
+        studyId === "study1" && (pageNumber === 2 || pageNumber === 3);
 
       return (
         <div className={cn("space-y-6", useSingleColumnLayout && "space-y-7")}>
@@ -450,6 +452,7 @@ function StudyPageContent({
             <CollectionCard
               collection={collection}
               nameOverride={page.collectionNameOverride}
+              showMarketplaceBadge={!useStudy1BrowseHeaderFix}
               imageCount={page.cardImageCount}
               metadataSize={page.metadataEmphasis ? "prominent" : "default"}
               showBilingualTerms
