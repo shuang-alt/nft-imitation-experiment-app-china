@@ -38,16 +38,12 @@ export function CollectionCard({
   const showcase = layout === "showcase";
   const prominentMetadata = metadataSize === "prominent";
   const marketplacePreviewLabel = showBilingualTerms
-    ? "Marketplace Preview（平台预览）"
+    ? "Marketplace Preview"
     : "Marketplace Preview";
-  const creatorLabel = showBilingualTerms ? "Creator（创作者）" : "Creator";
-  const createdDateLabel = showBilingualTerms
-    ? "Created Date（创建时间）"
-    : "Created Date";
-  const floorPriceLabel = showBilingualTerms
-    ? "Floor Price（最低挂单价）"
-    : "Floor Price";
-  const descriptionLabel = showBilingualTerms ? "Description（简介）" : "Description";
+  const creatorLabel = showBilingualTerms ? "Creator" : "Creator";
+  const createdDateLabel = showBilingualTerms ? "Created Date" : "Created Date";
+  const floorPriceLabel = showBilingualTerms ? "Floor Price" : "Floor Price";
+  const descriptionLabel = showBilingualTerms ? "Description" : "Description";
 
   return (
     <article

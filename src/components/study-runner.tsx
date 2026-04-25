@@ -230,7 +230,7 @@ export function StudyRunner({
       <div className="mx-auto flex min-h-screen max-w-4xl items-center justify-center px-4 py-16">
         <div className="rounded-[32px] border border-white/80 bg-white/85 px-8 py-10 text-center shadow-[0_30px_80px_rgba(15,23,42,0.12)]">
           <p className="text-sm font-medium text-slate-500">
-            Preparing study session（正在准备问卷）...
+            Preparing study session...
           </p>
         </div>
       </div>
@@ -292,7 +292,7 @@ function StudyPageContent({
 
   async function handleNext() {
     if (!isPageComplete(page, answers)) {
-      setErrorMessage("请完成本页所有必答项后再继续。");
+      setErrorMessage("Please complete all required items on this page before continuing.");
       return;
     }
 
@@ -301,7 +301,7 @@ function StudyPageContent({
     const currentSession = readStudySession(studyId, condition);
 
     if (!currentSession) {
-      setErrorMessage("本地会话丢失，请返回首页重新开始。");
+      setErrorMessage("Your local session was lost. Please return to the home page and start again.");
       return;
     }
 
@@ -370,7 +370,9 @@ function StudyPageContent({
         const latestSession = readStudySession(studyId, condition);
 
         if (!latestSession) {
-          setErrorMessage("本地会话丢失，请返回首页重新开始。");
+          setErrorMessage(
+            "Your local session was lost. Please return to the home page and start again.",
+          );
           return;
         }
 
@@ -401,7 +403,9 @@ function StudyPageContent({
           });
         } catch (backupError) {
           console.error("Failed to backup final submission to Firebase", backupError);
-          setErrorMessage("最终提交失败，请重试。数据尚未完成备份。");
+          setErrorMessage(
+            "Final submission failed. Please try again. The data has not been fully backed up.",
+          );
         }
 
         return;
@@ -412,7 +416,7 @@ function StudyPageContent({
       });
     } catch (error) {
       console.error(error);
-      setErrorMessage("保存失败，请稍后重试。");
+      setErrorMessage("Save failed. Please try again later.");
     }
   }
 
@@ -722,7 +726,7 @@ function StudyPageContent({
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-300 hover:bg-slate-50"
                 >
                   <ArrowLeft className="h-4 w-4" />
-                  上一页
+                  Previous
                 </Link>
               ) : null}
 
@@ -732,7 +736,7 @@ function StudyPageContent({
                 disabled={isPending}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {pageNumber === study.totalPages ? "提交并完成" : "下一页"}
+                {pageNumber === study.totalPages ? "Submit and Finish" : "Next"}
                 <ArrowRight className="h-4 w-4" />
               </button>
             </div>
@@ -743,7 +747,7 @@ function StudyPageContent({
               {page.showStudySnapshot !== false ? (
                 <section className="rounded-[32px] border border-white/80 bg-white/82 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.08)] backdrop-blur-xl">
                   <div className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
-                    Study Snapshot（问卷快照）
+                    Study Snapshot
                   </div>
                   <h2 className="mt-3 font-display text-2xl text-slate-950">
                     {study.fullTitle}
@@ -751,7 +755,7 @@ function StudyPageContent({
                   <dl className="mt-5 grid gap-3 sm:grid-cols-2">
                     <div className="rounded-[22px] border border-slate-100 bg-slate-50/80 p-4">
                       <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                        Respondent（受试者）
+                        Respondent
                       </dt>
                       <dd className="mt-2 text-sm font-semibold text-slate-900">
                         {abbreviateRespondentId(session.respondentId)}
@@ -759,7 +763,7 @@ function StudyPageContent({
                     </div>
                     <div className="rounded-[22px] border border-slate-100 bg-slate-50/80 p-4">
                       <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                        Page（页码）
+                        Page
                       </dt>
                       <dd className="mt-2 text-sm font-semibold text-slate-900">
                         {pageNumber} / {study.totalPages}
@@ -767,7 +771,7 @@ function StudyPageContent({
                     </div>
                     <div className="rounded-[22px] border border-slate-100 bg-slate-50/80 p-4">
                       <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                        Progress（进度）
+                        Progress
                       </dt>
                       <dd className="mt-2 text-sm font-semibold text-slate-900">
                         {progressPercent}%
@@ -775,10 +779,10 @@ function StudyPageContent({
                     </div>
                     <div className="rounded-[22px] border border-slate-100 bg-slate-50/80 p-4">
                       <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                        Privacy（隐私）
+                        Privacy
                       </dt>
                       <dd className="mt-2 text-sm font-semibold text-slate-900">
-                        Anonymous（匿名）
+                        Anonymous
                       </dd>
                     </div>
                   </dl>
